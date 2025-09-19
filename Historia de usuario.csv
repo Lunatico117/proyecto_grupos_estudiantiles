@@ -1,0 +1,21 @@
+Sprint;Id;Historias de usuario
+1;1;Como visitante, quiero ver una p gina de inicio clara para entender de qu‚ trata la plataforma y c¢mo registrarme.
+1;2;Como visitante, quiero crear una cuenta con email y contrase¤a para acceder a las funciones de la plataforma.
+1;3;Como usuario, quiero iniciar/cerrar sesi¢n de forma segura para proteger mi informaci¢n.
+1;4;Como usuario, quiero completar mi perfil (nombre, carrera, campus, intereses) para que los clubes me encuentren.
+1;5;Como usuario, quiero ver el cat logo de clubes en una lista b sica para explorar opciones disponibles.
+2;6;Como usuario, quiero buscar y filtrar clubes por facultad, intereses y campus para encontrar los que me convienen.
+2;7;Como usuario, quiero entrar al detalle de un club (descripci¢n, objetivos, requisitos, redes, pr¢ximos eventos).
+2;8;Como usuario, quiero solicitar unirme a un club para participar en sus actividades.
+2;9;Como l¡der de club, quiero aprobar o rechazar solicitudes de miembros para mantener el orden del grupo.
+2;10;Como l¡der de club, quiero definir roles (l¡der, moderador, miembro) para organizar permisos y responsabilidades.
+3;11;Como l¡der de club, quiero publicar anuncios/noticias visibles para miembros y p£blico del campus.
+3;12;Como miembro, quiero recibir notificaciones (web/email) cuando haya anuncios, eventos o cambios de estado.
+3;13;Como l¡der, quiero crear eventos del club con fecha, lugar y cupos para coordinar la participaci¢n.
+3;14;Como miembro, quiero confirmar asistencia a eventos para que el club pueda planificar mejor.
+3;15;Como usuario, quiero seguir (watch) un club sin unirme para mantenerme informado de sus novedades.
+4;16;Como administrador del campus, quiero un panel de administraci¢n para revisar clubes, reportes y m‚tricas.
+4;17;Como administrador, quiero aprobar la creaci¢n de nuevos clubes para garantizar que cumplan pol¡ticas institucionales.
+4;18;Como l¡der, quiero herramientas de moderaci¢n (eliminar comentarios, bloquear usuario del club) para mantener la convivencia.
+4;19;Como usuario, quiero que la web sea responsiva y accesible (WCAG b sica) para usarla desde m¢vil y lector de pantalla.
+4;20;Como usuario, quiero ver un mapa o directorio por campus para ubicar clubes y sus espacios de reuni¢n.
