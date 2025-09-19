@@ -3,5 +3,6 @@ En este repositorio se tendrá el seguimiento sobre la creación del proyecto de
 
 Integrantes del equipo:
 - Samuel Thomas Vasquez Gerena
-- Andreystyt Peña Perez
+- Andreysty Peña Perez
 - Raul Santiago Bermudez Camacho
+
