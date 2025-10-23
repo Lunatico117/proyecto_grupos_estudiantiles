@@ -5,4 +5,5 @@ Integrantes del equipo:
 - Samuel Thomas Vasquez Gerena
 - Andreysty Peña Perez
 - Raul Santiago Bermudez Camacho
+- David Alejandro Orozco Gomez
 
