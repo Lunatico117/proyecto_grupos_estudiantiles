@@ -1,3 +1,5 @@
 .env
 firebase/
 *pyc
+*.json
+
