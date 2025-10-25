@@ -1,0 +1,1 @@
+# maneja inicio de sesión, registro y validación.
