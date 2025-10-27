@@ -1,24 +1,26 @@
 import firebase_admin
 from firebase_admin import credentials, db
 import os
+from dotenv import load_dotenv
 
-# Usar variable de entorno o dejar la ruta configurable
-FIREBASE_CRED_PATH = os.getenv('FIREBASE_CRED_PATH', '.env/grupos-estudiantiles-c9f85-firebase-adminsdk-fbsvc-76389fb542.json"')
-FIREBASE_DB_URL = os.getenv('FIREBASE_DB_URL', 'https://grupos-estudiantiles-c9f85-default-rtdb.firebaseio.com/')
+load_dotenv()  # Carga las variables de entorno desde .env
+
+# Obtener las rutas desde las variables de entorno
+FIREBASE_CRED_PATH = os.getenv('FIREBASE_CRED_PATH')
+FIREBASE_DB_URL = os.getenv('FIREBASE_DB_URL')
+
+if not FIREBASE_CRED_PATH or not FIREBASE_DB_URL:
+    raise ValueError("Faltan variables de entorno FIREBASE_CRED_PATH o FIREBASE_DB_URL")
 
 # Inicializar Firebase solo una vez
 if not firebase_admin._apps:
     cred = credentials.Certificate(FIREBASE_CRED_PATH)
-    firebase_admin.initialize_app(cred, {
-        'databaseURL': FIREBASE_DB_URL
-    })
+    firebase_admin.initialize_app(cred, {'databaseURL': FIREBASE_DB_URL})
+
 
 class FirebaseService:
-    """Servicio reutilizable para acceso a Firebase Realtime Database."""
+    """Servicio para interactuar con Firebase Realtime Database."""
 
-    def __init__(self):
-        pass
-    
     def obtener_datos(self, ruta):
         ref = db.reference(ruta)
         return ref.get()
@@ -27,10 +29,16 @@ class FirebaseService:
         ref = db.reference(ruta)
         ref.set(datos)
 
-    def actualizar_datos(self, ruta, datos):
-        ref = db.reference(ruta)
-        ref.update(datos)
-
     def eliminar_datos(self, ruta):
         ref = db.reference(ruta)
         ref.delete()
+
+    def actualizar_datos(self, ruta, nuevos_datos):
+        ref = db.reference(ruta)
+        ref.set(nuevos_datos)
+
+    # Con este solo se actualiza el dato que se le pase
+    def actualizar_campo(self, ruta, campo, nuevo_valor):
+        datos_actuales = self.obtener_datos(ruta) or {}
+        datos_actuales[campo] = nuevo_valor
+        self.actualizar_datos(ruta, datos_actuales)
