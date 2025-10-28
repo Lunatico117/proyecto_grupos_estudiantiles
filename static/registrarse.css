@@ -1,0 +1,181 @@
+/* Reset general */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth; /* desplazamiento suave */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #033f63;
+    color: #fff;
+    overflow-y: auto; /* asegura que se pueda hacer scroll */
+}
+
+/* Barra de navegación */
+header {
+    background-color: #7c9885;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 2rem;
+    border-bottom: 4px solid #b5b682; 
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.nav-left .home-btn {
+    color: #fedc97;
+    font-size: 1.5rem;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.nav-left .home-btn:hover {
+    transform: scale(1.1);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+    margin-left: 8rem;
+    margin-right: 8rem;
+}
+
+nav ul li a:hover {
+    color: #fedc97;
+}
+
+.nav-right img {
+    height: 45px;
+}
+
+
+/* Sección Registro */
+.signup-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 🔽 Cambiado: antes era height: 100vh */
+    min-height: 100vh;
+    background: linear-gradient(180deg, #28666e 40%, #033f63 60%);
+    
+    /* 🔽 Agregamos más espacio para permitir scroll */
+    padding-top: 120px;   /* espacio debajo del header */
+    padding-bottom: 150px; /* espacio adicional para scroll hacia abajo */
+}
+
+.signup-container {
+    background-color: #7c9885;
+    border-radius: 15px;
+    padding: 3rem 2.5rem;
+    width: 380px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.signup-logo img {
+    width: 70px;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+}
+
+h2 {
+    color: #fedc97;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+}
+
+/* Inputs */
+.input-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 600;
+    color: #033f63;
+    margin-bottom: 0.4rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.7rem;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #033f63;
+}
+
+/* Botón */
+.signup-btn {
+    width: 100%;
+    background-color: #b5b682;
+    color: #033f63;
+    border: none;
+    padding: 0.9rem;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    margin-top: 1rem;
+}
+
+.signup-btn:hover {
+    background-color: #fedc97;
+    transform: scale(1.05);
+}
+
+/* Texto de login */
+.login-text {
+    margin-top: 1.2rem;
+    color: #fff;
+}
+
+.login-text a {
+    color: #fedc97;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-text a:hover {
+    text-decoration: underline;
+}
+
+/* Íconos sociales */
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 1.5rem;
+}
+
+.social-icons a {
+    background-color: #b5b682;
+    color: #033f63;
+    padding: 10px;
+    border-radius: 50%;
+    transition: background 0.3s;
+    font-size: 1.2rem;
+}
+
+.social-icons a:hover {
+    background-color: #fedc97;
+}

@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNAL Grupos Estudiantiles</title>
-    <link rel="stylesheet" href="../static/styles.css">
+    <title>Perfil - Grupos Estudiantiles UNAL</title>
+    <link rel="stylesheet" href="../static/perfil.css">
     <link rel="icon" href="../img/Logo.jpeg" type="image/jpeg">
-    <!-- Iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
-    <!-- Barra de navegacion -->
+    <!-- NAVBAR -->
     <header>
         <div class="nav-left">
             <a href="index.html" class="home-btn"><i class="fa-solid fa-house"></i></a>
@@ -21,19 +20,56 @@
                 <li><a href="index.html">INICIO</a></li>
                 <li><a href="clubes.html">CLUBES</a></li>
                 <li><a href="eventos.html">EVENTOS</a></li>
-                <li><a href="perfil.html">PERFIL</a></li>
+                <li><a href="perfil.html" class="active">PERFIL</a></li>
             </ul>
         </nav>
         <div class="nav-right">
-            <img src="../img/Logo.jpeg" alt="Logo Grupos Estudiantiles">
+            <img src="../img/Logo.jpeg" alt="Logo UNAL">
         </div>
     </header>
 
-    <section class="perfil">
-        
+    <!-- PERFIL -->
+    <section class="perfil-section">
+        <div class="perfil-container">
+            <!-- LADO IZQUIERDO -->
+            <div class="perfil-left">
+                <div class="foto-container">
+                    <img src="../img/user.png" alt="Foto de perfil">
+                    <button class="cambiar-foto"><i class="fa-solid fa-camera"></i></button>
+                </div>
+                <h2 class="nombre">Isabel López</h2>
+                <p class="correo">isabel.lopez@unal.edu.co</p>
+
+                <div class="atributos">
+                    <p><strong>Nombre completo:</strong> Isabel López García</p>
+                    <p><strong>Carrera:</strong> Ingeniería de Sistemas</p>
+                    <p><strong>Contraseña:</strong> *********</p>
+                </div>
+
+                <div class="perfil-buttons">
+                    <button class="editar-btn"><i class="fa-solid fa-pen"></i> Editar</button>
+                    <button class="guardar-btn hidden"><i class="fa-solid fa-check"></i> Guardar</button>
+                    <button class="cancelar-btn hidden"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                </div>
+            </div>
+
+            <!-- LADO DERECHO -->
+            <div class="perfil-right">
+                <div class="bio">
+                    <h2>Descripción personal</h2>
+                    <textarea readonly placeholder="Agrega una breve descripción sobre ti..."></textarea>
+                </div>
+
+                <div class="grupos">
+                    <h2>Grupos estudiantiles</h2>
+                    <ul>
+                        <li>Club de Programación Competitiva</li>
+                        <li>Grupo de Robótica</li>
+                        <li>Semillero de IA</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </section>
-
-
-
 </body>
 </html>
