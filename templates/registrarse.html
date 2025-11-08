@@ -36,7 +36,7 @@
             </div>
             <h2>CREAR CUENTA</h2>
 
-            <form>
+            <form action="/registro" method="POST">
                 <div class="input-group">
                     <label for="name">Nombre completo</label>
                     <input type="text" id="name" name="name" placeholder="Ingresa tu nombre completo" required>
@@ -44,7 +44,7 @@
 
                 <div class="input-group">
                     <label for="email">Correo institucional</label>
-                    <input type="email" id="email" name="email" placeholder="ejemplo@unal.edu.co" required>
+                    <input type="email" id="email" name="correo" placeholder="ejemplo@unal.edu.co" required>
                 </div>
 
                 <div class="input-group">
@@ -53,15 +53,15 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="confirm-password">Confirmar contraseña</label>
-                    <input type="password" id="confirm-password" name="confirm-password" placeholder="Repite tu contraseña" required>
+                    <label for="carrera">Carrera</label>
+                    <input type="carrera" id="carrera" name="carrera" placeholder="Ingrese su carrera" required>
                 </div>
 
                 <button type="submit" class="signup-btn">
                     <i class="fa-solid fa-user-plus"></i> Registrarse
                 </button>
 
-                <p class="login-text">¿Ya tienes cuenta? <a href="iniciar_sesion.html">Inicia sesión</a></p>
+                <p class="login-text">¿Ya tienes cuenta? <a href="/inicio_sesion">Inicia sesión</a></p>
             </form>
 
             <div class="social-icons">
@@ -69,6 +69,11 @@
                 <a href="#"><i class="fa-solid fa-envelope"></i></a>
             
             </div>
+        </div>
+    </section>
+</body>
+</html>
+
         </div>
     </section>
 </body>
