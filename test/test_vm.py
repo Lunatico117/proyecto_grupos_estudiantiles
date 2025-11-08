@@ -21,11 +21,11 @@ def test_usuario_vm():
     
     # Creamos un usuario de prueba usando la clase Usuario
     usuario_prueba = Usuario(
-        id_usuario="test1",
-        nombre_completo="Thomas Test",
-        correo="thomas@test.com",
+        id_usuario="guapeton",
+        nombre_completo="Nestor",
+        correo="Nestor@test.com",
         contraseña="1234",
-        carrera="Ingeniería"
+        carrera="Medicina"
     )
 
     print("Usuario creado:", usuario_prueba)
