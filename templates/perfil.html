@@ -8,68 +8,135 @@
     <link rel="icon" href="../static/img/Logo.png" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-
 <body>
-    <!-- NAVBAR -->
-    <header>
-        <div class="nav-left">
-            <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="/">INICIO</a></li>
-                <li><a href="/clubes">CLUBES</a></li>
-                <li><a href="/eventos">EVENTOS</a></li>
-                <li><a href="/perfil">PERFIL</a></li>
-            </ul>
-        </nav>
-        <div class="nav-right">
-            <img src="../static/img/Logo.png" alt="Logo UNAL">
-        </div>
-    </header>
+<header>
+    <div class="nav-left">
+        <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="/">INICIO</a></li>
+            <li><a href="/clubes">CLUBES</a></li>
+            <li><a href="/eventos">EVENTOS</a></li>
+            <li><a href="/perfil">PERFIL</a></li>
+        </ul>
+    </nav>
+    <div class="nav-right">
+        <img src="../static/img/Logo.png" alt="Logo UNAL">
+    </div>
+</header>
 
-    <!-- PERFIL -->
-    <section class="perfil-section">
-        <div class="perfil-container">
-            <!-- LADO IZQUIERDO -->
-            <div class="perfil-left">
-                <div class="foto-container">
-                    <img src="../img/user.png" alt="Foto de perfil">
-                    <button class="cambiar-foto"><i class="fa-solid fa-camera"></i></button>
-                </div>
-                <h2 class="nombre">Isabel López</h2>
-                <p class="correo">isabel.lopez@unal.edu.co</p>
+<section class="perfil-section">
+    <div class="perfil-container">
 
-                <div class="atributos">
-                    <p><strong>Nombre completo:</strong> Isabel López García</p>
-                    <p><strong>Carrera:</strong> Ingeniería de Sistemas</p>
-                    <p><strong>Contraseña:</strong> *********</p>
-                </div>
+        <!-- LADO IZQUIERDO -->
+        <div class="perfil-left">
+            <div class="foto-container">
+                <img src="../img/user.png" alt="Foto de perfil">
+                <button class="cambiar-foto"><i class="fa-solid fa-camera"></i></button>
+            </div>
+            <h2 class="nombre">{{ usuario.nombre_completo }}</h2>
+            <p class="correo">{{ usuario.correo }}</p>
 
-                <div class="perfil-buttons">
-                    <button class="editar-btn"><i class="fa-solid fa-pen"></i> Editar</button>
-                    <button class="guardar-btn hidden"><i class="fa-solid fa-check"></i> Guardar</button>
-                    <button class="cancelar-btn hidden"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-                </div>
+            <div class="atributos">
+                <p><strong>Nombre completo:</strong> 
+                    <span id="nombre_completo">{{ usuario.nombre_completo }}</span>
+                </p>
+                <p><strong>Carrera:</strong> 
+                    <span id="carrera">{{ usuario.carrera }}</span>
+                </p>
+                <p><strong>Contraseña:</strong> 
+                    <input type="password" id="contraseña" placeholder="*********">
+                </p>
             </div>
 
-            <!-- LADO DERECHO -->
-            <div class="perfil-right">
-                <div class="bio">
-                    <h2>Descripción personal</h2>
-                    <textarea readonly placeholder="Agrega una breve descripción sobre ti..."></textarea>
-                </div>
-
-                <div class="grupos">
-                    <h2>Grupos estudiantiles</h2>
-                    <ul>
-                        <li>Club de Programación Competitiva</li>
-                        <li>Grupo de Robótica</li>
-                        <li>Semillero de IA</li>
-                    </ul>
-                </div>
+            <div class="perfil-buttons">
+                <button class="editar-btn" onclick="editarPerfil()"><i class="fa-solid fa-pen"></i> Editar</button>
+                <button class="guardar-btn hidden" onclick="guardarPerfil()"><i class="fa-solid fa-check"></i> Guardar</button>
+                <button class="cancelar-btn hidden" onclick="cancelarEdicion()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
             </div>
         </div>
-    </section>
+
+        <!-- LADO DERECHO -->
+        <div class="perfil-right">
+            <div class="bio">
+                <h2>Descripción personal</h2>
+                <textarea id="bio" readonly>{{ usuario.bio or '' }}</textarea>
+            </div>
+
+            <div class="grupos">
+                <h2>Grupos estudiantiles</h2>
+                <ul id="lista-grupos">
+                    {% for grupo in usuario.grupos %}
+                        <li>
+                            {{ grupo.nombre }}
+                            <button onclick="salirseDeGrupo('{{ grupo.id_grupo }}')">Salir</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+function editarPerfil() {
+    document.querySelector('#nombre_completo').contentEditable = true;
+    document.querySelector('#carrera').contentEditable = true;
+    document.querySelector('#bio').removeAttribute('readonly');
+    document.querySelector('#contraseña').removeAttribute('readonly');
+    document.querySelector('.editar-btn').classList.add('hidden');
+    document.querySelector('.guardar-btn').classList.remove('hidden');
+    document.querySelector('.cancelar-btn').classList.remove('hidden');
+}
+
+function cancelarEdicion() {
+    location.reload(); // Recarga la página para cancelar los cambios
+}
+
+function guardarPerfil() {
+    const nombre_completo = document.querySelector('#nombre_completo').innerText;
+    const carrera = document.querySelector('#carrera').innerText;
+    const bio = document.querySelector('#bio').value;
+    const contraseña = document.querySelector('#contraseña').value;
+
+    fetch('/perfil', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            nombre_completo: nombre_completo,
+            password: contraseña,  // coincide con ViewModel
+            carrera: carrera,
+            descripcion_personal: bio  // coincide con ViewModel
+        })
+
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            alert('Perfil actualizado correctamente');
+            location.reload();
+        } else {
+            alert('Error al actualizar perfil');
+        }
+    });
+}
+
+function salirseDeGrupo(id_grupo) {
+    fetch(`/salirse_grupo/${id_grupo}`, {
+        method: 'POST'
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            alert("Te has salido del grupo correctamente");
+            location.reload();
+        } else {
+            alert("No se pudo salir del grupo");
+        }
+    });
+}
+</script>
 </body>
 </html>

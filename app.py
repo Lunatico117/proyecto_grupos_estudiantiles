@@ -3,8 +3,12 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from functools import wraps  # Para crear decoradores
 from src.viewmodel.auth_viewmodel import UsuarioAuthViewModel 
 from src.services.firebase_global import firebase_global  # Asegurarse de que este objeto ya tenga db inicializado
+from src.viewmodel.usuarios_viewmodel import UsuarioViewModel
+from src.viewmodel.grupos_viewmodel import GruposViewModel
 
+usuario_vm = UsuarioViewModel()  # Inicializamos el ViewModel para manejar usuarios
 auth_vm = UsuarioAuthViewModel()
+grupos_vm = GruposViewModel()
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Necesario para manejar sesiones
 
@@ -119,11 +123,56 @@ def clubes():
 def eventos():
     return render_template("eventos.html", usuario=session["usuario"])
 
-
-@app.route("/perfil")
+@app.route("/perfil", methods=["GET", "POST"])
 @login_requerido
 def perfil():
-    return render_template("perfil.html", usuario=session["usuario"])
+    correo = session["usuario"]["correo"]
+
+    if request.method == "POST":
+        data = request.get_json()
+        # Actualizamos usuario usando exactamente los argumentos que acepta el ViewModel
+        resultado = usuario_vm.actualizar_usuario(
+            correo,
+            nombre_completo=data.get("nombre_completo"),
+            password=data.get("password"),  # coincide con el ViewModel
+            carrera=data.get("carrera"),
+            descripcion_personal=data.get("descripcion_personal")  # coincide con el ViewModel
+        )
+
+        if resultado["success"]:
+            # Actualizamos la sesión para reflejar cambios
+            session["usuario"].update({
+                "nombre_completo": data.get("nombre_completo"),
+                "carrera": data.get("carrera"),
+                "bio": data.get("descripcion_personal")
+            })
+        return {"success": resultado["success"]}
+
+    # GET → mostrar perfil
+    usuario_obj = usuario_vm.obtener_usuario(correo)
+    if not usuario_obj:
+        flash("No se encontraron datos del usuario en Firebase.", "danger")
+        return redirect(url_for("index"))
+
+    grupos_usuario = usuario_vm.consultar_grupos_usuario(correo)
+    usuario_data = {
+        "correo": correo,
+        "nombre_completo": usuario_obj.nombre_completo,
+        "carrera": usuario_obj.carrera,
+        "bio": getattr(usuario_obj, "descripcion_personal", ""),  # usar el atributo correcto
+        "grupos": grupos_usuario  # lista de dict con 'id_grupo' y 'nombre'
+    }
+
+    return render_template("perfil.html", usuario=usuario_data)
+
+
+# Ruta para salirse de un grupo
+@app.route("/salirse_grupo/<id_grupo>", methods=["POST"])
+@login_requerido
+def salirse_grupo(id_grupo):
+    correo = session["usuario"]["correo"]
+    resultado = usuario_vm.salirse_de_grupo(correo, id_grupo)
+    return {"success": resultado["success"]}
 
 
 # ========================================================

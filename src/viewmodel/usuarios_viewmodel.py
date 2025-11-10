@@ -28,21 +28,24 @@ class UsuarioViewModel:
         return Usuario(**data)
 
     # Actualiza los datos de un usuario. Solo se cambian los campos enviados.
-    def actualizar_usuario(self, correo, nombre=None, password=None, carrera=None):
+    def actualizar_usuario(self, correo, nombre_completo=None, password=None, carrera=None, descripcion_personal=None):
         # Primero obtenemos el usuario para verificar que existe.
         usuario = self.obtener_usuario(correo)
         if not usuario:
             return {'success': False, 'error': 'Usuario no encontrado.'}
 
-        # Si se pasó un nombre nuevo, se actualiza.
-        if nombre:
-            usuario.nombre = nombre
+        # Si se pasó un nombre completo nuevo, se actualiza.
+        if nombre_completo:
+            usuario.nombre_completo = nombre_completo
         # Si se pasó una contraseña nueva, se actualiza.
         if password:
-            usuario.password = password
+            usuario.contraseña = password
         # Si se pasó una carrera nueva, se actualiza.
         if carrera:
             usuario.carrera = carrera
+        # Si se pasó una descripción personal nueva, se actualiza.
+        if descripcion_personal:
+            usuario.descripcion_personal = descripcion_personal
 
         # Se vuelve a generar la clave del correo.
         correo_key = correo.replace('@', '_at_').replace('.', '_dot_')
