@@ -7,10 +7,10 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', "Roboto";
     background-color: #033f63;
     color: #fff;
-    overflow-y: auto; /* asegura que se pueda hacer scroll */
+    overflow-y: auto;
 }
 
 /* Barra de navegación */

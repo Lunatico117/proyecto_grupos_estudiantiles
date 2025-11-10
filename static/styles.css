@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', "Roboto";
     background-color: #033f63;
     color: #fff;
 }
@@ -106,6 +106,32 @@ nav ul li a:hover {
 .iniciar-sesion:hover {
     background-color: #fedc97;
     transform: scale(1.05);
+}
+
+.cerrar-sesion {
+    background-color: #b5b682;
+    color: #033f63;
+    border: none;
+    padding: 0.9rem 2rem;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 150%;
+    text-decoration: none;
+}
+
+.cerrar-sesion:hover {
+    background-color: #fedc97;
+    transform: scale(1.05);
+}
+
+.saludo{
+    font-size: 1rem;
+    color: #fedc97;
+    margin-top: 1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
 /* Dos tercios: título + subtítulo */

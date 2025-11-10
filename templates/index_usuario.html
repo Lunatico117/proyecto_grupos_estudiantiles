@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNAL Grupos Estudiantiles</title>
+    <link rel="stylesheet" href="../static/styles.css">
+    <link rel="icon" href="../static/img/Logo.png" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Barra de navegación -->
+    <header>
+        <div class="nav-left">
+            <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">INICIO</a></li>
+                <li><a href="/clubes">CLUBES</a></li>
+                <li><a href="/eventos">EVENTOS</a></li>
+                <li><a href="/perfil">PERFIL</a></li>
+            </ul>
+        </nav>
+        <div class="nav-right">
+            <img src="../static/img/Logo.png" alt="Logo Grupos Estudiantiles">
+        </div>
+    </header>
+
+    <!-- Home modificado para usuarios loggeados -->
+    <section class="home">
+        <div class="home-container">
+            <div class="home-left">
+                <img src="../static/img/Logo.png" alt="Logo Grupos Estudiantiles" class="home-logo">
+                <!-- Ocultamos iniciar sesión y mostramos saludo -->
+                <p class="saludo">¡Bienvenido, {{ usuario.nombre }}!</p>
+                <a href="/cerrar_sesion" class="cerrar-sesion">Cerrar Sesión</a>
+            </div>
+
+            <div class="home-right">
+                <h1 class="home-title">NOMBRE</h1>
+                <p class="home-subtitle">SEMBRAMOS CIENCIA<br> COSECHAMOS FUTURO</p>
+            </div>
+        </div>
+
+        <div class="social-icons">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+    </section>
+</body>
+</html>
