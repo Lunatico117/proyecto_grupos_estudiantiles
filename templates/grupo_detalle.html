@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ grupo.nombre }} | Detalle del Grupo</title>
+  <link rel="stylesheet" href="../static/grupo_detalle.css"/>
+  <link rel="icon" href="../static/img/Logo.png" type="image/png"/>
+  <!-- Iconos Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+
+<body>
+  <!-- Barra de navegación -->
+    <header>
+        <div class="nav-left">
+            <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">INICIO</a></li>
+                <li><a href="/clubes">CLUBES</a></li>
+                <li><a href="/eventos">EVENTOS</a></li>
+                <li><a href="/perfil">PERFIL</a></li>
+            </ul>
+        </nav>
+        <div class="nav-right">
+            <img src="../static/img/Logo.png" alt="Logo Grupos Estudiantiles">
+        </div>
+    </header>
+
+  <!-- Sección de detalle del grupo -->
+<section class="grupo-detalle">
+  <div class="wrap">
+    <div class="card">
+      <h1 class="grupo-nombre">{{ grupo.nombre }}</h1>
+      <span class="meta grupo-categoria">{{ grupo.categoria or 'General' }}</span>
+
+      <p class="grupo-descripcion">{{ grupo.descripcion }}</p>
+
+      <p class="section-title-sm"><strong>Organizadores:</strong> {{ (grupo.organizadores or [])|join(', ') }}</p>
+
+      <p class="section-title-sm"><strong>Integrantes ({{ (grupo.integrantes or [])|length }}):</strong></p>
+      <ul>
+        {% for m in (grupo.integrantes or []) %}
+          <li>
+            <span class="mail integrante-mail">{{ m }}</span>
+            {% set soy_org = correo in (grupo.organizadores or []) %}
+            {% if soy_org and (m not in (grupo.organizadores or [])) %}
+              <form class="expulsar-form" action="{{ url_for('expulsar_miembro', id_grupo=grupo.id_grupo, correo_miembro=m) }}"
+                    method="POST" onsubmit="return confirm('¿Expulsar a {{ m }}?')">
+                <button class="btn btn-danger btn-expulsar" type="submit">
+                  <i class="fa-solid fa-user-slash"></i> Expulsar
+                </button>
+              </form>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="actions grupo-actions">
+        <a class="btn btn-volver" href="{{ url_for('clubes') }}">
+          <i class="fa-solid fa-arrow-left"></i> Volver
+        </a>
+        {% if correo in (grupo.organizadores or []) %}
+          <form class="eliminar-form" action="{{ url_for('eliminar_club', id_grupo=grupo.id_grupo) }}"
+                method="POST"
+                onsubmit="return confirm('¿Eliminar el grupo {{ grupo.nombre }}? Esta acción no se puede deshacer.')">
+            <button class="btn btn-danger btn-eliminar" type="submit">
+              <i class="fa-solid fa-trash"></i> Eliminar grupo
+            </button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>
