@@ -150,3 +150,18 @@ nav ul li a:hover{ color:#fedc97 }
 }
 .grupo-edit textarea{ min-height: 84px; resize: vertical; }
 .grupo-edit .ge-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:4px; }
+
+/* Flashes locales en la card de grupo */
+.flash-local { margin-top: 6px; }
+.flash-local .msg{
+  background:#4dec62ab; color:#ffffff;
+  border-left:4px solid #b5b682;
+  padding:.6rem .8rem; border-radius:10px;
+  margin:.45rem 0; box-shadow:0 4px 12px rgba(0,0,0,.18);
+  font-weight:700;
+}
+
+/* Variantes opcionales por nivel (si quieres diferenciar colores) */
+.flash-local .msg.success{ border-left-color:#8fd19e; }
+.flash-local .msg.warning{ border-left-color:#e9aa17; }
+.flash-local .msg.danger{  border-left-color:#e0704e; }

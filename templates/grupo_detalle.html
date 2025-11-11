@@ -36,6 +36,35 @@
         <h1 class="grupo-nombre">{{ grupo.nombre }}</h1>
         <span class="meta grupo-categoria">{{ grupo.categoria or 'General' }}</span>
 
+        <!-- Flashes locales (solo mensajes etiquetados como "clubes") -->
+        <div class="flash flash-local" aria-live="polite" role="status">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                {% if 'clubes' in category %}
+                  {% set cls = category.replace('clubes','').strip() %}
+                  <div class="msg {{ cls }}">{{ message }}</div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+        </div>
+        <script>
+          // Auto-ocultar flashes locales
+          (function () {
+            const flashes = document.querySelectorAll('.flash-local .msg');
+            if (!flashes.length) return;
+            setTimeout(() => {
+              flashes.forEach(el => {
+                el.style.transition = 'opacity .35s ease';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 400);
+              });
+            }, 3200);
+          })();
+        </script>
+        <!-- /Flashes locales -->
+
         <p class="grupo-descripcion">{{ grupo.descripcion }}</p>
 
         {# ====== Editor inline: solo organizadores ====== #}
