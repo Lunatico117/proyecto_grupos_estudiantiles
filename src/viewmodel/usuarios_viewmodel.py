@@ -56,27 +56,32 @@ class UsuarioViewModel:
 
     # Elimina completamente un usuario del sistema y lo quita de todos los grupos donde esté inscrito (de Firebase).
     def eliminar_usuario(self, correo):
-        # Generar la clave segura para Firebase
         correo_key = correo.replace('@', '_at_').replace('.', '_dot_')
         ruta_usuario = f"{self.ruta_usuarios}/{correo_key}"
 
-        # Importación solo dentro del método para evitar circularidad
         from src.viewmodel.grupos_viewmodel import GruposViewModel
-
-        # Primero, obtener todos los grupos y quitar al usuario de cada uno
         grupos_vm = GruposViewModel(self.service)
+
         todos_los_grupos = grupos_vm.listar_grupos()
 
         for grupo in todos_los_grupos:
             if correo in grupo["integrantes"]:
-                grupo["integrantes"].remove(correo)
-                # Actualizar el grupo en Firebase
-                self.service.actualizar_datos(f"grupos/{grupo['id_grupo']}", grupo)
+                # Caso: único organizador → eliminar grupo
+                if correo in grupo["organizadores"] and len(grupo["organizadores"]) == 1:
+                    grupos_vm.eliminar_grupo(grupo["id_grupo"])
+                else:
+                    # Caso: hay otros organizadores → solo remover al usuario
+                    if correo in grupo["integrantes"]:
+                        grupo["integrantes"].remove(correo)
+                    if correo in grupo["organizadores"]:
+                        grupo["organizadores"].remove(correo)
+                    self.service.actualizar_datos(f"grupos/{grupo['id_grupo']}", grupo)
 
-        # Luego eliminar el usuario de Firebase
+        # Finalmente, eliminar usuario de Firebase
         self.service.eliminar_datos(ruta_usuario)
 
         return {'success': True, 'mensaje': f'Usuario {correo} eliminado y removido de sus grupos.'}
+
 
     # Devuelve una lista con todos los grupos a los que pertenece un usuario.
     def consultar_grupos_usuario(self, correo):
