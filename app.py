@@ -12,6 +12,13 @@ grupos_vm = GruposViewModel()
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Necesario para manejar sesiones
 
+# =============================================
+#Flash de los mensajes clubes
+#==============================================
+def flash_clubes(msg, level="info"):
+    # usa categorías compuestas: "clubes success", "clubes warning", etc.
+    flash(msg, f"clubes {level}")
+
 
 # ========================================================
 # Decorador para verificar si el usuario ha iniciado sesión
@@ -185,25 +192,15 @@ def eliminar_perfil():
 # ========================================================
 # Clubes
 # ========================================================
-@app.route("/clubes", methods=["GET"])
+@app.route("/clubes")
 @login_requerido
 def clubes():
-    # Sesión demo si no existe autenticación real
     try:
         grupos_vm = GruposViewModel(firebase_global)
-
-        # Semilla opcional (una sola vez) si no hay 'grupos' en Firebase
-        existentes = firebase_global.obtener_datos("grupos") or {}
-        if not existentes:
-            try:
-                flash("Se crearon clubes de ejemplo.", "success")
-            except Exception as e:
-                flash(f"No se pudo sembrar grupos: {e}", "danger")
-
         grupos = grupos_vm.listar_grupos() or []
     except Exception as e:
         grupos = []
-        flash(f"Error cargando clubes: {e}", "danger")
+        flash_clubes(f"Error cargando clubes: {e}", "danger")
 
     return render_template("clubes.html", grupos=grupos, correo=correo_actual())
 
@@ -235,10 +232,10 @@ def crear_club():
 
     categorias_validas = {"Tecnología", "Ciencia", "Cultura", "Deportes"}
     if not nombre:
-        flash("El nombre del grupo es obligatorio.", "warning")
+        flash_clubes("El nombre del grupo es obligatorio.", "warning")
         return redirect(url_for("clubes"))
     if categoria not in categorias_validas:
-        flash("Categoría inválida.", "warning")
+        flash_clubes("Categoría inválida.", "warning")
         return redirect(url_for("clubes"))
 
     # organizadores tipeados
@@ -261,9 +258,9 @@ def crear_club():
         if creador:
             vm.agregar_integrante(nuevo["id_grupo"], creador)
 
-        flash("Grupo creado.", "success")
+        flash_clubes("Grupo creado.", "success")
     except Exception as e:
-        flash(f"No se pudo crear el grupo: {e}", "danger")
+        flash_clubes(f"No se pudo crear el grupo: {e}", "danger")
 
     return redirect(url_for("clubes"))
 
@@ -280,9 +277,9 @@ def unirme_club(id_grupo):
     try:
         grupos_vm = GruposViewModel(firebase_global)
         ok = grupos_vm.agregar_integrante(id_grupo, correo)
-        flash("Te uniste al grupo." if ok else "Ya perteneces o no fue posible unirte.", "success" if ok else "warning")
+        flash_clubes("Te uniste al grupo." if ok else "Ya perteneces o no fue posible unirte.", "success" if ok else "warning")
     except Exception as e:
-        flash(f"No se pudo procesar la solicitud: {e}", "danger")
+        flash_clubes(f"No se pudo procesar la solicitud: {e}", "danger")
 
     return redirect(url_for("clubes"))
 
@@ -293,7 +290,7 @@ def unirme_club(id_grupo):
 def salirme_club(id_grupo):
     correo = correo_actual()
     if not correo:
-        flash("Debes iniciar sesión para salir de un grupo.", "warning")
+        flash_clubes("Debes iniciar sesión para salir de un grupo.", "warning")
         return redirect(url_for("inicio_sesion"))
     ...
 
@@ -308,7 +305,7 @@ def salirme_club(id_grupo):
             # Fallback: remover usando el modelo Grupo
             grupo_obj = grupos_vm.obtener_grupo(id_grupo)
             if not grupo_obj:
-                flash("Grupo no encontrado.", "warning")
+                flash_clubes("Grupo no encontrado.", "warning")
                 return redirect(url_for("clubes"))
 
             dto = grupo_obj.to_dict() if hasattr(grupo_obj, "to_dict") else dict(grupo_obj)
@@ -322,11 +319,11 @@ def salirme_club(id_grupo):
                 ok = False
 
         if ok:
-            flash("Saliste del grupo.", "success")
+            flash_clubes("Saliste del grupo.", "success")
         else:
-            flash("No estabas en el grupo o no fue posible salir.", "warning")
+            flash_clubes("No estabas en el grupo o no fue posible salir.", "warning")
     except Exception as e:
-        flash(f"No se pudo procesar la solicitud: {e}", "danger")
+        flash_clubes(f"No se pudo procesar la solicitud: {e}", "danger")
 
     return redirect(url_for("clubes"))
 
@@ -340,22 +337,22 @@ def eliminar_club(id_grupo):
         vm = GruposViewModel(firebase_global)
         grupo = vm.obtener_grupo(id_grupo)
         if not grupo:
-            flash("Grupo no encontrado.", "warning")
+            flash_clubes("Grupo no encontrado.", "warning")
             return redirect(url_for("clubes"))
 
         # Solo organizadores pueden eliminar
         orgs = list(grupo.organizadores or [])
         if user not in orgs:
-            flash("No tienes permisos para eliminar este grupo.", "danger")
+            flash_clubes("No tienes permisos para eliminar este grupo.", "danger")
             return redirect(url_for("clubes"))
 
         res = vm.eliminar_grupo(id_grupo)  # usa tu VM
         if res.get("success"):
-            flash(f"Grupo eliminado.", "success")
+            flash_clubes(f"Grupo eliminado.", "success")
         else:
-            flash(res.get("error") or "No se pudo eliminar el grupo.", "danger")
+            flash_clubes(res.get("error") or "No se pudo eliminar el grupo.", "danger")
     except Exception as e:
-        flash(f"Error al eliminar el grupo: {e}", "danger")
+        flash_clubes(f"Error al eliminar el grupo: {e}", "danger")
     return redirect(url_for("clubes"))
 
 
@@ -368,23 +365,23 @@ def expulsar_miembro(id_grupo, correo_miembro):
         vm = GruposViewModel(firebase_global)
         grupo = vm.obtener_grupo(id_grupo)
         if not grupo:
-            flash("Grupo no encontrado.", "warning")
+            flash_clubes("Grupo no encontrado.", "warning")
             return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
 
         orgs = list(grupo.organizadores or [])
         if user not in orgs:
-            flash("No tienes permisos para expulsar integrantes.", "danger")
+            flash_clubes("No tienes permisos para expulsar integrantes.", "danger")
             return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
 
         # Protege a los organizadores: no expulsables desde aquí
         if correo_miembro in orgs:
-            flash("No puedes expulsar a un organizador desde esta acción.", "warning")
+            flash_clubes("No puedes expulsar a un organizador desde esta acción.", "warning")
             return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
 
         ok = vm.remover_integrante(id_grupo, correo_miembro)
-        flash("Integrante expulsado." if ok else "No fue posible expulsar.", "success" if ok else "warning")
+        flash_clubes("Integrante expulsado." if ok else "No fue posible expulsar.", "success" if ok else "warning")
     except Exception as e:
-        flash(f"Error al expulsar: {e}", "danger")
+        flash_clubes(f"Error al expulsar: {e}", "danger")
     return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
 
 
@@ -402,6 +399,50 @@ def grupo_detalle(id_grupo):
         flash(f"Error al cargar grupo: {e}", "danger")
         return redirect(url_for("clubes"))
     return render_template("grupo_detalle.html", grupo=grupo.to_dict(), correo=correo_actual())
+
+# ---------- CLUBES (editar grupo: nombre/descripcion) ----------
+@app.post("/grupos/<id_grupo>/editar")
+@login_requerido
+def editar_grupo(id_grupo):
+    correo = correo_actual()
+    vm = GruposViewModel()
+
+    grupo = vm.obtener_grupo(id_grupo)
+    if not grupo:
+        flash_clubes("El grupo no existe.", "warning")
+        return redirect(url_for("clubes"))
+
+    orgs = list(grupo.organizadores or [])
+    if correo not in orgs:
+        flash_clubes("No tienes permisos para editar este grupo.", "danger")
+        return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+
+    nombre = (request.form.get("nombre") or "").strip()
+    descripcion = (request.form.get("descripcion") or "").strip()
+
+    try:
+        ok = vm.actualizar_grupo(id_grupo, nombre if nombre else None, descripcion if descripcion else None)
+        flash_clubes("Grupo actualizado." if ok else "No hubo cambios.", "success" if ok else "info")
+    except Exception as e:
+        flash_clubes(f"No se pudo actualizar el grupo: {e}", "danger")
+
+    return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+
+
+# ---------- EVENTOS (stubs enlazables; implementarás luego) ----------
+@app.get("/grupos/<id_grupo>/eventos")
+@login_requerido
+def grupo_eventos(id_grupo):
+    # TODO: listar eventos del grupo
+    flash_clubes("Vista de eventos del grupo (próximamente).", "info")
+    return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+
+@app.get("/grupos/<id_grupo>/eventos/nuevo")
+@login_requerido
+def grupo_evento_nuevo(id_grupo):
+    # TODO: formulario para crear evento
+    flash_clubes("Crear evento (próximamente).", "info")
+    return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
 
 # ========================================================
 # Ejecutar servidor

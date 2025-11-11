@@ -34,13 +34,33 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message in messages %}
-              <div class="msg {{ category }}" style="background:#7c9885;color:#033f63;border-left:4px solid #b5b682;padding:.6rem .8rem;border-radius:8px;margin:.5rem 0;">
-                {{ message }}
-              </div>
+              {% if 'clubes' in category %}
+                {# opcional: quita la palabra "clubes" de la clase para no afectar estilos #}
+                {% set cls = category.replace('clubes', '').strip() %}
+                <div class="msg {{ cls }}" style="background:#7c9885;color:#033f63;border-left:4px solid #b5b682;padding:.6rem .8rem;border-radius:8px;margin:.5rem 0;">
+                  {{ message }}
+                </div>
+              {% endif %}
             {% endfor %}
           {% endif %}
         {% endwith %}
       </div>
+
+      <script>
+        // Auto-ocultar notificaciones flash
+        (function () {
+          const flashes = document.querySelectorAll('.flash .msg');
+          if (!flashes.length) return;
+          setTimeout(() => {
+            flashes.forEach(el => {
+              el.style.transition = 'opacity .35s ease';
+              el.style.opacity = '0';
+              setTimeout(() => el.remove(), 400);
+            });
+          }, 3500);
+        })();
+      </script>
+
 
       <script>
         // Auto-ocultar notificaciones flash
@@ -96,11 +116,11 @@
       <!-- MIS GRUPOS -->
       <h2 class="section-title" style="margin-top:18px;">Mis grupos</h2>
       <section class="cards-grid" id="gridMisGrupos">
-        {% set tengo = false %}
+        {% set ns = namespace(tengo=false) %}
         {% for g in grupos %}
           {% set es_miembro = correo in (g.integrantes or []) %}
           {% if es_miembro %}
-            {% set tengo = true %}
+            {% set ns.tengo = true %}
             <article class="card">
               <span class="tag">{{ g.categoria or 'General' }}</span>
               <h3><a href="{{ url_for('grupo_detalle', id_grupo=g.id_grupo) }}" style="color:#fedc97;text-decoration:none;">{{ g.nombre }}</a></h3>
@@ -135,7 +155,7 @@
           {% endif %}
         {% endfor %}
 
-        {% if not tengo %}
+        {% if not ns.tengo %}
           <div class="empty-state">Aún no perteneces a ningún grupo.</div>
         {% endif %}
       </section>
