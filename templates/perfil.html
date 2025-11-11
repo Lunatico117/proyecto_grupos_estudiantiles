@@ -50,11 +50,19 @@
                 </p>
             </div>
 
-            <div class="perfil-buttons">
-                <button class="editar-btn" onclick="editarPerfil()"><i class="fa-solid fa-pen"></i> Editar</button>
-                <button class="guardar-btn hidden" onclick="guardarPerfil()"><i class="fa-solid fa-check"></i> Guardar</button>
-                <button class="cancelar-btn hidden" onclick="cancelarEdicion()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-            </div>
+        <div class="perfil-buttons">
+            <button class="editar-btn" onclick="editarPerfil()"><i class="fa-solid fa-pen"></i> Editar</button>
+            <button class="guardar-btn hidden" onclick="guardarPerfil()"><i class="fa-solid fa-check"></i> Guardar</button>
+            <button class="cancelar-btn hidden" onclick="cancelarEdicion()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+            <!-- Botón de eliminar usuario -->
+            <form method="POST" action="/perfil/eliminar" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.');">
+                <button type="submit" class="eliminar-btn">
+                    <i class="fa-solid fa-trash"></i> Eliminar Usuario
+                </button>
+</form>
+
+        </div>
+
         </div>
 
         <!-- LADO DERECHO -->
@@ -70,7 +78,6 @@
                     {% for grupo in usuario.grupos %}
                         <li>
                             {{ grupo.nombre }}
-                            <button onclick="salirseDeGrupo('{{ grupo.id_grupo }}')">Salir</button>
                         </li>
                     {% endfor %}
                 </ul>
@@ -123,20 +130,9 @@ function guardarPerfil() {
     });
 }
 
-function salirseDeGrupo(id_grupo) {
-    fetch(`/salirse_grupo/${id_grupo}`, {
-        method: 'POST'
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.success){
-            alert("Te has salido del grupo correctamente");
-            location.reload();
-        } else {
-            alert("No se pudo salir del grupo");
-        }
-    });
-}
+
+
+
 </script>
 </body>
 </html>

@@ -1,0 +1,189 @@
+/* ==============================
+   Estilos generales
+============================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', "Roboto";
+  background-color: #033f63;
+  color: #fff;
+}
+
+/* ==============================
+   Header / Navegación
+============================== */
+/* BARRA DE NAVEGACION */
+header {
+    background-color: #7c9885;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 2rem;
+    border-bottom: 4px solid #b5b682; 
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.nav-left .home-btn {
+    color: #fedc97;
+    font-size: 1.5rem;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.nav-left .home-btn:hover {
+    transform: scale(1.1);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+    margin-left: 8rem;
+    margin-right: 8rem;
+}
+
+nav ul li a:hover {
+    color: #fedc97;
+}
+
+.nav-right img {
+    height: 45px;
+}
+
+
+/* ==============================
+   Contenedor central
+============================== */
+.wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 110px 1.2rem 2rem; /* deja espacio para el header fijo */
+}
+
+/* ==============================
+   Tarjeta principal
+============================== */
+.card {
+  background: #7c9885;
+  border: 2px solid rgba(181,182,130,.3);
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.22);
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+}
+
+.card h1 {
+  color: #fedc97;
+  font-size: 2rem;
+}
+
+.meta {
+  display: inline-block;
+  background: #b5b682;
+  color: #033f63;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.card p {
+  color: #e9eef1;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.section-title-sm {
+  font-size: 1rem;
+  color: #fedc97;
+  margin-top: 8px;
+}
+
+/* ==============================
+   Lista de integrantes
+============================== */
+.grupo-detalle ul {
+  list-style: none;
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
+}
+
+.grupo-detalle ul li{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(3,63,99,.25);
+  border: 1px solid rgba(181,182,130,.3);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+.mail {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* ==============================
+   Botones
+============================== */
+.btn {
+  display: inline-block;
+  background: #b5b682;
+  color: #033f63;
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter .2s, transform .1s;
+}
+
+.btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.btn[disabled] {
+  opacity: .6;
+  pointer-events: none;
+}
+
+/* Botones de acción peligrosos */
+.btn-danger {
+  background: #ff6b6b;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #ff4c4c;
+  transform: translateY(-1px);
+}
+
+/* ==============================
+   Sección de acciones
+============================== */
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}

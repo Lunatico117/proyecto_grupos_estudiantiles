@@ -1,0 +1,305 @@
+/* ========================
+   Reset y estilos básicos
+======================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Montserrat', "Roboto";
+  background-color: #033f63;
+  color: #fff;
+}
+
+/* ========================
+   NAVBAR
+======================== */
+header {
+  background-color: #7c9885;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  border-bottom: 4px solid #b5b682;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.nav-left .home-btn {
+  color: #fedc97;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: transform 0.2s;
+}
+
+.nav-left .home-btn:hover {
+  transform: scale(1.1);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: color 0.3s;
+  margin-left: 8rem;
+  margin-right: 8rem;
+}
+
+nav ul li a:hover {
+  color: #fedc97;
+}
+
+.nav-right img {
+  height: 45px;
+}
+
+/* ========================
+   SECCIÓN CLUBES
+======================== */
+.clubes {
+  background: linear-gradient(180deg, #28666e 40%, #033f63 60%);
+  min-height: 100vh;
+  padding: 110px 0 48px; /* espacio bajo el header fijo */
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Flash messages */
+.flash {
+  position: sticky;
+  top: 12px;
+  z-index: 12;
+}
+
+/* Títulos de sección */
+.section-title {
+  color: #fedc97;
+  margin: 6px 0 8px;
+  font-size: 1.25rem;
+  letter-spacing: .5px;
+}
+
+/* ========================
+   TOOLBAR / FORMULARIOS
+======================== */
+.toolbar {
+  display: grid;
+  gap: 12px;
+  background: rgba(124,152,133,.25);
+  border: 1px solid rgba(181,182,130,.35);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.toolbar__row {
+  display: grid;
+  gap: 10px;
+}
+
+@media (min-width: 900px) {
+  .toolbar__row {
+    grid-template-columns: 1.2fr .55fr 1.2fr 1.8fr auto;
+  }
+}
+
+.toolbar input,
+.toolbar select,
+.toolbar textarea {
+  height: 40px;
+  border-radius: 8px;
+  border: none;
+  padding: 0 12px;
+  outline: none;
+}
+
+.toolbar textarea {
+  min-height: 40px;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+/* ========================
+   BUSCADOR + CHIPS
+======================== */
+.searchbar {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+}
+/* Contenedor de chips */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Chips individuales */
+.chip {
+  background: rgba(181,182,130,.85); /* color de fondo inicial */
+  color: #033f63;                     /* color del texto */
+  border: none;                        /* sin borde extra */
+  border-radius: 999px;                /* forma de pastilla */
+  padding: 6px 10px;                   /* espacio interno */
+  font: 700 12px/1 sans-serif;         /* peso y tamaño de fuente */
+  letter-spacing: .3px;                /* separación de letras */
+  cursor: pointer;                     /* cursor en hover */
+  transition: transform .15s ease, background .2s ease; /* transición suave */
+}
+
+/* Estado hover */
+.chip:hover {
+  transform: translateY(-2px);
+}
+
+/* Estado activo */
+.chip.is-active {
+  background: #fedc97;                 /* fondo cuando está activo */
+}
+
+
+/* ========================
+   CARDS / GRILLAS
+======================== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px,1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.card {
+  background: #7c9885;
+  border: 2px solid rgba(181,182,130,.3);
+  border-radius: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,.22);
+  padding: 16px 18px;
+  transition: transform .18s, box-shadow .18s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 22px rgba(0,0,0,.3);
+}
+
+.card h3 {
+  color: #fedc97;
+  margin: 4px 0 6px;
+  font-size: 20px;
+}
+
+.card p {
+  color: #e9eef1;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+/* Pill / integrantes */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fedc97;
+  color: #033f63;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font: 700 12px/1 sans-serif;
+}
+
+/* Tag / categoría */
+.tag {
+  display: inline-block;
+  color: #033f63;
+  background: #b5b682;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font: 600 12px/1.2 sans-serif;
+  margin-bottom: 8px;
+}
+
+/* Empty state */
+.empty-state {
+  width: min(700px, 92%);
+  margin: 18px auto 0;
+  text-align: center;
+  color: #fedc97;
+  font-weight: 600;
+  background: rgba(3,63,99,.25);
+  border: 1px solid rgba(181,182,130,.3);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+/* ========================
+   BOTONES
+======================== */
+.btn {
+  display: inline-block;
+  background: #b5b682;
+  color: #033f63;
+  border: none;
+  border-radius: 999px;
+  padding: .5rem .9rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter .2s, transform .1s;
+}
+
+.btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+.btn[disabled] {
+  opacity: .6;
+  pointer-events: none;
+}
+
+/* ================================
+   ICONOS SOCIALES
+================================ */
+
+.social-icons {
+    position: absolute;
+    right: 40px;
+    top: 90%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.social-icons a {
+    background-color: #b5b682;
+    color: #033f63;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+}
+
+.social-icons a:hover {
+    background-color: #fedc97;
+}

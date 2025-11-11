@@ -1,39 +1,233 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNAL Grupos Estudiantiles</title>
-    <link rel="stylesheet" href="../static/styles.css">
-    <link rel="icon" href="../static/img/Logo.png" type="image/jpeg">
-    <!-- Iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clubes | UNAL Grupos Estudiantiles</title>
+  <link rel="stylesheet" href="../static/clubes.css"/>
+  <link rel="icon" href="../static/img/Logo.png" type="image/png"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  
 </head>
-
 <body>
-    <!-- Barra de navegacion -->
-    <header>
-        <div class="nav-left">
-            <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
+  <!-- NAV (reusa tu navbar) -->
+  <header>
+    <div class="nav-left"><a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a></div>
+    <nav>
+      <ul>
+        <li><a href="/">INICIO</a></li>
+        <li><a href="/clubes">CLUBES</a></li>
+        <li><a href="/eventos">EVENTOS</a></li>
+        <li><a href="/perfil">PERFIL</a></li>
+      </ul>
+    </nav>
+    <div class="nav-right"><img src="../static/img/Logo.png" alt="Logo UNAL"/></div>
+  </header>
+
+  <!-- Sección con fondo y paddings definidos en tu styles.css -->
+  <section class="clubes">
+    <div class="wrap">
+
+      <!-- FLASH -->
+      <div class="flash">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="msg {{ category }}" style="background:#7c9885;color:#033f63;border-left:4px solid #b5b682;padding:.6rem .8rem;border-radius:8px;margin:.5rem 0;">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
+
+      <script>
+        // Auto-ocultar notificaciones flash
+        (function () {
+          const flashes = document.querySelectorAll('.flash .msg');
+          if (!flashes.length) return;
+          setTimeout(() => {
+            flashes.forEach(el => {
+              el.style.transition = 'opacity .35s ease';
+              el.style.opacity = '0';
+              setTimeout(() => el.remove(), 400);
+            });
+          }, 3500); // 3.5s en pantalla
+        })();
+      </script>
+      <!-- Título -->
+      <h1 class="section-title">Clubes Estudiantiles</h1>
+      <p style="color:#e9eef1;margin-bottom:12px;">Explora comunidades activas y encuentra tu espacio.</p>
+
+      <!-- Crear Grupo -->
+      <div class="toolbar">
+        <h2 class="section-title" style="margin:0;">Crear Grupo</h2>
+        <form action="{{ url_for('crear_club') }}" method="POST" class="toolbar__row">
+          <input type="text" name="nombre" placeholder="Nombre del grupo" required>
+          <select name="categoria" required>
+            <option value="">Categoría</option>
+            <option>Tecnología</option>
+            <option>Ciencia</option>
+            <option>Cultura</option>
+            <option>Deportes</option>
+          </select>
+          <input type="text" name="organizadores" placeholder="Organizadores (correos @unal.edu.co, separados por coma)" required>
+          <textarea name="descripcion" placeholder="Descripción breve" required></textarea>
+          <button type="submit" class="btn">Crear</button>
+        </form>
+
+        <!-- Buscador + chips (para la grilla general) -->
+        <div class="searchbar">
+          <div style="display:flex;gap:10px;align-items:center;background:#033f63;border:1px solid rgba(3,63,99,0.35);border-radius:12px;padding:8px 12px;">
+            <i class="fa-solid fa-magnifying-glass" style="color:#fedc97"></i>
+            <input id="buscar" type="text" placeholder="Buscar por nombre o categoría..." style="flex:1;background:transparent;border:none;color:#fff;outline:none;">
+          </div>
+          <div class="chips">
+            <button class="chip is-active" data-cat="">Todos</button>
+            <button class="chip" data-cat="Tecnología">Tecnología</button>
+            <button class="chip" data-cat="Ciencia">Ciencia</button>
+            <button class="chip" data-cat="Cultura">Cultura</button>
+            <button class="chip" data-cat="Deportes">Deportes</button>
+          </div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="/">INICIO</a></li>
-                <li><a href="/clubes">CLUBES</a></li>
-                <li><a href="/eventos">EVENTOS</a></li>
-                <li><a href="/perfil">PERFIL</a></li>
-            </ul>
-        </nav>
-        <div class="nav-right">
-            <img src="../static/img/Logo.png" alt="Logo Grupos Estudiantiles">
-        </div>
-    </header>
+      </div>
 
-    <section class="clubes">
+      <!-- MIS GRUPOS -->
+      <h2 class="section-title" style="margin-top:18px;">Mis grupos</h2>
+      <section class="cards-grid" id="gridMisGrupos">
+        {% set tengo = false %}
+        {% for g in grupos %}
+          {% set es_miembro = correo in (g.integrantes or []) %}
+          {% if es_miembro %}
+            {% set tengo = true %}
+            <article class="card">
+              <span class="tag">{{ g.categoria or 'General' }}</span>
+              <h3><a href="{{ url_for('grupo_detalle', id_grupo=g.id_grupo) }}" style="color:#fedc97;text-decoration:none;">{{ g.nombre }}</a></h3>
+              <p>{{ g.descripcion }}</p>
+              <div class="card-actions">
+                <div class="pill">
+                  <i class="fa-regular fa-user"></i>
+                  {{ g.integrantes|length if g.integrantes else 0 }} integrantes
+                </div>
 
-    </section>
+                {% set es_organizador = correo in (g.organizadores or []) %}
+                <div style="display:flex; gap:8px;">
+                  {% if es_organizador %}
+                    <a class="btn" href="{{ url_for('grupo_detalle', id_grupo=g.id_grupo) }}">Gestionar</a>
+                  {% else %}
+                    <a class="btn" href="{{ url_for('grupo_detalle', id_grupo=g.id_grupo) }}">Ver</a>
+                  {% endif %}
 
+                  {% if es_organizador %}
+                    <form action="{{ url_for('eliminar_club', id_grupo=g.id_grupo) }}" method="POST"
+                          onsubmit="return confirm('¿Eliminar el grupo {{ g.nombre }}? Esta acción no se puede deshacer.')">
+                      <button type="submit" class="btn js-submit">Eliminar</button>
+                    </form>
+                  {% else %}
+                    <form action="{{ url_for('salirme_club', id_grupo=g.id_grupo) }}" method="POST" class="form-action">
+                      <button type="submit" class="btn js-submit">Salirme</button>
+                    </form>
+                  {% endif %}
+                </div>
+              </div>
+            </article>
+          {% endif %}
+        {% endfor %}
 
+        {% if not tengo %}
+          <div class="empty-state">Aún no perteneces a ningún grupo.</div>
+        {% endif %}
+      </section>
 
+      <!-- TODOS LOS CLUBES -->
+      <h2 class="section-title" style="margin-top:18px;">Todos los clubes</h2>
+      <section class="cards-grid" id="gridGeneral">
+        {% for g in grupos %}
+          {% set es_miembro = correo in (g.integrantes or []) %}
+          <article class="card" data-nombre="{{ g.nombre|lower }}" data-cat="{{ g.categoria|default('', true)|lower }}">
+            <span class="tag">{{ g.categoria or 'General' }}</span>
+            <h3><a href="{{ url_for('grupo_detalle', id_grupo=g.id_grupo) }}" style="color:#fedc97;text-decoration:none;">{{ g.nombre }}</a></h3>
+            <p>{{ g.descripcion }}</p>
+            <div class="card-actions">
+              <div class="pill">
+                <i class="fa-regular fa-user"></i>
+                {{ g.integrantes|length if g.integrantes else 0 }} integrantes
+              </div>
+
+              {% set es_miembro = correo in (g.integrantes or []) %}
+              {% set es_organizador = correo in (g.organizadores or []) %}
+
+              <div style="display:flex; gap:8px;">
+                <a class="btn" href="{{ url_for('grupo_detalle', id_grupo=g.id_grupo) }}">Ver</a>
+
+                {% if es_organizador %}
+                  <form action="{{ url_for('eliminar_club', id_grupo=g.id_grupo) }}" method="POST"
+                        onsubmit="return confirm('¿Eliminar el grupo {{ g.nombre }}?')">
+                    <button type="submit" class="btn js-submit">Eliminar</button>
+                  </form>
+                {% elif es_miembro %}
+                  <form action="{{ url_for('salirme_club', id_grupo=g.id_grupo) }}" method="POST" class="form-action">
+                    <button type="submit" class="btn js-submit">Salirme</button>
+                  </form>
+                {% else %}
+                  <form action="{{ url_for('unirme_club', id_grupo=g.id_grupo) }}" method="POST" class="form-action">
+                    <button type="submit" class="btn js-submit">Unirme</button>
+                  </form>
+                {% endif %}
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+
+        {% if grupos|length == 0 %}
+          <div class="empty-state">No hay clubes para mostrar.</div>
+        {% endif %}
+      </section>
+    </div>
+  </section>
+
+  <!-- SOCIAL -->
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fa-solid fa-envelope"></i></a>
+  </div>
+
+  <script>
+    // Evitar doble submit en botones (feedback rápido)
+    document.querySelectorAll('.js-submit').forEach(btn=>{
+      btn.addEventListener('click', function(){
+        this.setAttribute('disabled','disabled');
+        this.textContent = 'Procesando...';
+        this.closest('form').submit();
+      });
+    });
+
+    // Filtro por texto + chips (solo afecta la grilla general)
+    const q = document.getElementById('buscar');
+    const chips = document.querySelectorAll('.chip');
+    const grid = document.getElementById('gridGeneral');
+    let cat = "";
+
+    function filtrar(){
+      const val = (q.value || "").trim().toLowerCase();
+      grid.querySelectorAll('.card').forEach(card=>{
+        const n = card.dataset.nombre || "";
+        const c = card.dataset.cat || "";
+        const matchNombre = n.includes(val) || c.includes(val);
+        const matchCat = !cat || c === cat.toLowerCase();
+        card.style.display = (matchNombre && matchCat) ? "" : "none";
+      });
+    }
+    q.addEventListener('input', filtrar);
+    chips.forEach(ch=>{
+      ch.addEventListener('click', ()=>{
+        chips.forEach(x=>x.classList.remove('is-active'));
+        ch.classList.add('is-active');
+        cat = ch.dataset.cat || "";
+        filtrar();
+      });
+    });
+  </script>
 </body>
 </html>

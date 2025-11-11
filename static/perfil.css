@@ -164,7 +164,8 @@ nav ul li a:hover {
 
 .editar-btn,
 .guardar-btn,
-.cancelar-btn {
+.cancelar-btn, 
+.eliminar-btn{
     border: none;
     padding: 0.9rem 2rem;
     border-radius: 25px;
@@ -198,6 +199,18 @@ nav ul li a:hover {
     background-color: #fedc97;
     color: #033f63;
 }
+
+.eliminar-btn {
+    background-color: #e74c3c; /* rojo intenso */
+    color: white;
+    border: none;
+
+}
+
+.eliminar-btn:hover {
+    background-color: #c0392b;
+}
+
 
 /* Parte derecha */
 .perfil-right {
