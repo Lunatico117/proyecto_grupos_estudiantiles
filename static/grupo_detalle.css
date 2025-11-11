@@ -121,3 +121,32 @@ nav ul li a:hover{ color:#fedc97 }
   .btn{ width:100%; justify-content:center }
 }
 
+/* ===== Editor inline de grupo (solo organizadores) ===== */
+.grupo-edit{
+  margin-top: 4px;
+  background: rgba(3,63,99,.18);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+.grupo-edit .ge-row{ display: grid; gap: 6px; }
+.grupo-edit label{
+  font-weight: 800;
+  color: #fedc97;
+  font-size: .9rem;
+}
+.grupo-edit input,
+.grupo-edit textarea{
+  width: 100%;
+  border: 1px solid rgba(181,182,130,.35);
+  border-radius: 10px;
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  outline: none;
+  padding: 10px 12px;
+  font: inherit;
+}
+.grupo-edit textarea{ min-height: 84px; resize: vertical; }
+.grupo-edit .ge-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:4px; }

@@ -12,57 +12,86 @@
 
 <body>
   <!-- Barra de navegación -->
-    <header>
-        <div class="nav-left">
-            <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="/">INICIO</a></li>
-                <li><a href="/clubes">CLUBES</a></li>
-                <li><a href="/eventos">EVENTOS</a></li>
-                <li><a href="/perfil">PERFIL</a></li>
-            </ul>
-        </nav>
-        <div class="nav-right">
-            <img src="../static/img/Logo.png" alt="Logo Grupos Estudiantiles">
-        </div>
-    </header>
+  <header>
+    <div class="nav-left">
+      <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="/">INICIO</a></li>
+        <li><a href="/clubes">CLUBES</a></li>
+        <li><a href="/eventos">EVENTOS</a></li>
+        <li><a href="/perfil">PERFIL</a></li>
+      </ul>
+    </nav>
+    <div class="nav-right">
+      <img src="../static/img/Logo.png" alt="Logo Grupos Estudiantiles">
+    </div>
+  </header>
 
   <!-- Sección de detalle del grupo -->
-<section class="grupo-detalle">
-  <div class="wrap">
-    <div class="card">
-      <h1 class="grupo-nombre">{{ grupo.nombre }}</h1>
-      <span class="meta grupo-categoria">{{ grupo.categoria or 'General' }}</span>
+  <section class="grupo-detalle">
+    <div class="wrap">
+      <div class="card">
+        <h1 class="grupo-nombre">{{ grupo.nombre }}</h1>
+        <span class="meta grupo-categoria">{{ grupo.categoria or 'General' }}</span>
 
-      <p class="grupo-descripcion">{{ grupo.descripcion }}</p>
+        <p class="grupo-descripcion">{{ grupo.descripcion }}</p>
 
-      <p class="section-title-sm"><strong>Organizadores:</strong> {{ (grupo.organizadores or [])|join(', ') }}</p>
+        {# ====== Editor inline: solo organizadores ====== #}
+        {% if correo in (grupo.organizadores or []) %}
+        <form class="grupo-edit" action="{{ url_for('editar_grupo', id_grupo=grupo.id_grupo) }}" method="POST">
+          <div class="ge-row">
+            <label for="g-nombre">Nombre del grupo</label>
+            <input id="g-nombre" name="nombre" type="text" placeholder="Nuevo nombre (opcional)">
+          </div>
+          <div class="ge-row">
+            <label for="g-desc">Descripción</label>
+            <textarea id="g-desc" name="descripcion" placeholder="Nueva descripción (opcional)"></textarea>
+          </div>
+          <div class="ge-actions">
+            <button class="btn" type="submit"><i class="fa-solid fa-pen-to-square"></i> Guardar cambios</button>
+          </div>
+        </form>
+        {% endif %}
+        {# ====== /Editor inline ====== #}
 
-      <p class="section-title-sm"><strong>Integrantes ({{ (grupo.integrantes or [])|length }}):</strong></p>
-      <ul>
-        {% for m in (grupo.integrantes or []) %}
+        <p class="section-title-sm"><strong>Organizadores:</strong> {{ (grupo.organizadores or [])|join(', ') }}</p>
+
+        <p class="section-title-sm"><strong>Integrantes ({{ (grupo.integrantes or [])|length }}):</strong></p>
+        <ul>
+          {% for m in (grupo.integrantes or []) %}
           <li>
             <span class="mail integrante-mail">{{ m }}</span>
             {% set soy_org = correo in (grupo.organizadores or []) %}
             {% if soy_org and (m not in (grupo.organizadores or [])) %}
-              <form class="expulsar-form" action="{{ url_for('expulsar_miembro', id_grupo=grupo.id_grupo, correo_miembro=m) }}"
-                    method="POST" onsubmit="return confirm('¿Expulsar a {{ m }}?')">
-                <button class="btn btn-danger btn-expulsar" type="submit">
-                  <i class="fa-solid fa-user-slash"></i> Expulsar
-                </button>
-              </form>
+            <form class="expulsar-form" action="{{ url_for('expulsar_miembro', id_grupo=grupo.id_grupo, correo_miembro=m) }}"
+                  method="POST" onsubmit="return confirm('¿Expulsar a {{ m }}?')">
+              <button class="btn btn-danger btn-expulsar" type="submit">
+                <i class="fa-solid fa-user-slash"></i> Expulsar
+              </button>
+            </form>
             {% endif %}
           </li>
-        {% endfor %}
-      </ul>
+          {% endfor %}
+        </ul>
 
-      <div class="actions grupo-actions">
-        <a class="btn btn-volver" href="{{ url_for('clubes') }}">
-          <i class="fa-solid fa-arrow-left"></i> Volver
-        </a>
-        {% if correo in (grupo.organizadores or []) %}
+        <div class="actions grupo-actions">
+          <a class="btn btn-volver" href="{{ url_for('clubes') }}">
+            <i class="fa-solid fa-arrow-left"></i> Volver
+          </a>
+
+          <a class="btn" href="{{ url_for('grupo_eventos', id_grupo=grupo.id_grupo) }}">
+            <i class="fa-solid fa-calendar-days"></i> Ver eventos
+          </a>
+
+          {% if correo in (grupo.organizadores or []) %}
+            <a class="btn" href="{{ url_for('grupo_evento_nuevo', id_grupo=grupo.id_grupo) }}">
+              <i class="fa-solid fa-plus"></i> Crear evento
+            </a>
+          {% endif %}
+
+          {% if correo in (grupo.organizadores or []) %}
           <form class="eliminar-form" action="{{ url_for('eliminar_club', id_grupo=grupo.id_grupo) }}"
                 method="POST"
                 onsubmit="return confirm('¿Eliminar el grupo {{ grupo.nombre }}? Esta acción no se puede deshacer.')">
@@ -70,11 +99,11 @@
               <i class="fa-solid fa-trash"></i> Eliminar grupo
             </button>
           </form>
-        {% endif %}
+          {% endif %}
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
 </body>
 </html>

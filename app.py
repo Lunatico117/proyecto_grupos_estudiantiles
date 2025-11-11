@@ -400,6 +400,50 @@ def grupo_detalle(id_grupo):
         return redirect(url_for("clubes"))
     return render_template("grupo_detalle.html", grupo=grupo.to_dict(), correo=correo_actual())
 
+# ---------- CLUBES (editar grupo: nombre/descripcion) ----------
+@app.post("/grupos/<id_grupo>/editar")
+@login_requerido
+def editar_grupo(id_grupo):
+    correo = correo_actual()
+    vm = GruposViewModel()
+
+    grupo = vm.obtener_grupo(id_grupo)
+    if not grupo:
+        flash_clubes("El grupo no existe.", "warning")
+        return redirect(url_for("clubes"))
+
+    orgs = list(grupo.organizadores or [])
+    if correo not in orgs:
+        flash_clubes("No tienes permisos para editar este grupo.", "danger")
+        return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+
+    nombre = (request.form.get("nombre") or "").strip()
+    descripcion = (request.form.get("descripcion") or "").strip()
+
+    try:
+        ok = vm.actualizar_grupo(id_grupo, nombre if nombre else None, descripcion if descripcion else None)
+        flash_clubes("Grupo actualizado." if ok else "No hubo cambios.", "success" if ok else "info")
+    except Exception as e:
+        flash_clubes(f"No se pudo actualizar el grupo: {e}", "danger")
+
+    return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+
+
+# ---------- EVENTOS (stubs enlazables; implementarás luego) ----------
+@app.get("/grupos/<id_grupo>/eventos")
+@login_requerido
+def grupo_eventos(id_grupo):
+    # TODO: listar eventos del grupo
+    flash_clubes("Vista de eventos del grupo (próximamente).", "info")
+    return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+
+@app.get("/grupos/<id_grupo>/eventos/nuevo")
+@login_requerido
+def grupo_evento_nuevo(id_grupo):
+    # TODO: formulario para crear evento
+    flash_clubes("Crear evento (próximamente).", "info")
+    return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+
 # ========================================================
 # Ejecutar servidor
 # ========================================================
