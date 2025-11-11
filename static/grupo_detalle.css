@@ -1,189 +1,123 @@
-/* ==============================
-   Estilos generales
-============================== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* =========================================================
+   DETALLE DE GRUPO – Diseño pulido (sin tocar tu HTML)
+   Usa la misma paleta: #033f63, #28666e, #7c9885, #b5b682, #fedc97
+   ========================================================= */
+
+/* Reset básico */
+* { box-sizing: border-box; margin:0; padding:0; }
+body { font-family: 'Montserrat',"Roboto",sans-serif; color:#fff; background:#033f63; }
+
+/* NAV (mantenemos tu estilo) */
+header{
+  background:#7c9885; display:flex; justify-content:space-between; align-items:center;
+  padding:.5rem 2rem; border-bottom:4px solid #b5b682; position:fixed; top:0; width:100%; z-index:10;
+}
+.nav-left .home-btn{ color:#fedc97; font-size:1.5rem; text-decoration:none; transition:transform .2s }
+.nav-left .home-btn:hover{ transform:scale(1.1) }
+nav ul{ list-style:none; display:flex; gap:2rem }
+nav ul li a{ color:#fff; text-decoration:none; font-weight:500; letter-spacing:1px; transition:color .3s; margin:0 8rem }
+nav ul li a:hover{ color:#fedc97 }
+.nav-right img{ height:45px }
+
+/* Fondo a ancho completo */
+.grupo-detalle{
+  background: linear-gradient(180deg, #28666e 40%, #033f63 60%);
+  min-height:100vh;
+  padding:110px 0 56px;         /* respeta navbar y da respiro abajo */
 }
 
-body {
-  font-family: 'Montserrat', "Roboto";
-  background-color: #033f63;
-  color: #fff;
+/* Contenedor centrado */
+.wrap{ max-width:980px; margin:0 auto; padding:0 20px }
+
+/* Tarjeta principal */
+.card{
+  background:#7c9885;
+  border:1px solid rgba(181,182,130,.35);
+  border-radius:18px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+  padding:22px 22px 20px;
+  display:grid; gap:14px;
+  position:relative;
 }
 
-/* ==============================
-   Header / Navegación
-============================== */
-/* BARRA DE NAVEGACION */
-header {
-    background-color: #7c9885;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 2rem;
-    border-bottom: 4px solid #b5b682; 
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 10;
+/* Cabecera del grupo: título + chip */
+.grupo-nombre{
+  color:#fedc97; font-size:2rem; line-height:1.2; margin:0;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+}
+.meta.grupo-categoria{
+  display:inline-block; margin-top:6px;
+  background:#b5b682; color:#033f63; padding:6px 12px; border-radius:999px; font-weight:800; font-size:.9rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,.15);
 }
 
-.nav-left .home-btn {
-    color: #fedc97;
-    font-size: 1.5rem;
-    text-decoration: none;
-    transition: transform 0.2s;
+/* Descripción */
+.grupo-descripcion{
+  color:#e9eef1; line-height:1.5; font-size:1rem;
+  background: rgba(3,63,99,.18);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;
+  padding:10px 12px;
 }
 
-.nav-left .home-btn:hover {
-    transform: scale(1.1);
+/* Subtítulos (Organizadores / Integrantes) */
+.section-title-sm{
+  color:#fedc97; font-weight:800; letter-spacing:.3px; margin-top:6px;
+  display:block;
 }
+.section-title-sm strong{ font-weight:900 }
 
-nav ul {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
+/* Lista de integrantes en “pastillas” con acción alineada */
+.grupo-detalle ul{
+  list-style:none; margin-top:6px; display:grid; gap:8px;
 }
-
-nav ul li a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: 500;
-    letter-spacing: 1px;
-    transition: color 0.3s;
-    margin-left: 8rem;
-    margin-right: 8rem;
-}
-
-nav ul li a:hover {
-    color: #fedc97;
-}
-
-.nav-right img {
-    height: 45px;
-}
-
-
-/* ==============================
-   Contenedor central
-============================== */
-.wrap {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 110px 1.2rem 2rem; /* deja espacio para el header fijo */
-}
-
-/* ==============================
-   Tarjeta principal
-============================== */
-.card {
-  background: #7c9885;
-  border: 2px solid rgba(181,182,130,.3);
-  border-radius: 14px;
-  box-shadow: 0 6px 16px rgba(0,0,0,.22);
-  padding: 20px;
-  display: grid;
-  gap: 12px;
-}
-
-.card h1 {
-  color: #fedc97;
-  font-size: 2rem;
-}
-
-.meta {
-  display: inline-block;
-  background: #b5b682;
-  color: #033f63;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-.card p {
-  color: #e9eef1;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.section-title-sm {
-  font-size: 1rem;
-  color: #fedc97;
-  margin-top: 8px;
-}
-
-/* ==============================
-   Lista de integrantes
-============================== */
-.grupo-detalle ul {
-  list-style: none;
-  margin-top: 8px;
-  display: grid;
-  gap: 8px;
-}
-
 .grupo-detalle ul li{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(3,63,99,.25);
-  border: 1px solid rgba(181,182,130,.3);
-  border-radius: 12px;
-  padding: 8px 12px;
+  display:grid; grid-template-columns: 1fr auto; align-items:center;
+  background: rgba(3,63,99,.22);
+  border:1px solid rgba(181,182,130,.30);
+  border-radius:12px;
+  padding:8px 10px;
+  transition: transform .12s ease, box-shadow .12s ease, background .18s ease;
 }
-
-.mail {
-  color: #fff;
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-
-/* ==============================
-   Botones
-============================== */
-.btn {
-  display: inline-block;
-  background: #b5b682;
-  color: #033f63;
-  border: none;
-  border-radius: 999px;
-  padding: 0.5rem 0.9rem;
-  font-weight: 800;
-  cursor: pointer;
-  text-decoration: none;
-  transition: filter .2s, transform .1s;
-}
-
-.btn:hover {
-  filter: brightness(1.05);
+.grupo-detalle ul li:hover{
   transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,.22);
+  background: rgba(3,63,99,.26);
+}
+.mail.integrante-mail{
+  color:#fff; font-weight:600; opacity:.96; overflow-wrap:anywhere;
 }
 
-.btn[disabled] {
-  opacity: .6;
-  pointer-events: none;
+/* Botones base */
+.btn{
+  display:inline-flex; align-items:center; gap:6px;
+  background:#b5b682; color:#033f63; border:none; border-radius:999px;
+  padding:.5rem .95rem; font-weight:900; cursor:pointer; text-decoration:none;
+  transition: filter .2s, transform .1s, background .2s, box-shadow .2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+}
+.btn:hover{ filter:brightness(1.05); transform:translateY(-1px) }
+.btn[disabled]{ opacity:.6; pointer-events:none }
+.btn i{ font-size:.95rem }
+
+/* Variantes */
+.btn-danger{ background:#cf5a3d; color:#fff }
+.btn-danger:hover{ background:#e0704e }
+.btn-volver{ background:#b5b682 }
+.btn-expulsar{ padding:.4rem .75rem }
+
+/* Barra de acciones inferior */
+.actions.grupo-actions{
+  display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;
+  border-top:1px dashed rgba(255,255,255,.18);
+  padding-top:12px;
 }
 
-/* Botones de acción peligrosos */
-.btn-danger {
-  background: #ff6b6b;
-  color: #fff;
+/* Responsive */
+@media (max-width: 640px){
+  nav ul li a{ margin:0 }                 /* evita desbordes del menú en móviles */
+  .grupo-detalle ul li{ grid-template-columns:1fr; gap:.55rem }
+  .actions.grupo-actions{ flex-direction:column }
+  .btn{ width:100%; justify-content:center }
 }
 
-.btn-danger:hover {
-  background: #ff4c4c;
-  transform: translateY(-1px);
-}
-
-/* ==============================
-   Sección de acciones
-============================== */
-.actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 12px;
-  flex-wrap: wrap;
-}
