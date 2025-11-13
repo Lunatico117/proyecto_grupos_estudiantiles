@@ -1,16 +1,18 @@
 class Grupo:
     # Clase que representa un grupo estudiantil con varios organizadores.
 
-    def __init__(self, nombre, descripcion, categoria, organizadores, integrantes=None, id_grupo=None):
+    def __init__(self, nombre, descripcion, categoria, organizadores, integrantes=None, id_grupo=None, eventos=None):
         # ID único basado en nombre
-        self.id_grupo = id_grupo if id_grupo else nombre.replace(" ", "_").lower()  
+        self.id_grupo = id_grupo if id_grupo else nombre.replace(" ", "_").lower()
         self.nombre = nombre
         self.descripcion = descripcion
         self.categoria = categoria
-        # Revisa si los organizadores son varios y lo trata como lista, si es solo uno es el primer elemento de la lista
+        # Revisa si los organizadores son varios y lo trata como lista
         self.organizadores = organizadores if isinstance(organizadores, list) else [organizadores]
         # inicia con todos los organizadores como miembros
-        self.integrantes = integrantes if integrantes else self.organizadores.copy()  
+        self.integrantes = integrantes if integrantes else self.organizadores.copy()
+        # eventos: lista de diccionarios (cada uno representa un evento)
+        self.eventos = eventos if eventos else []
 
     def to_dict(self):
         # Convierte el objeto en un diccionario para Firebase.
@@ -20,8 +22,22 @@ class Grupo:
             "descripcion": self.descripcion,
             "categoria": self.categoria,
             "organizadores": self.organizadores,
-            "integrantes": self.integrantes
+            "integrantes": self.integrantes,
+            "eventos": self.eventos,
         }
+
+    @classmethod
+    def from_dict(cls, d):
+        return cls(
+            nombre=d.get("nombre"),
+            descripcion=d.get("descripcion"),
+            categoria=d.get("categoria"),
+            organizadores=d.get("organizadores", []),
+            integrantes=d.get("integrantes", []),
+            id_grupo=d.get("id_grupo"),
+            eventos=d.get("eventos", []),
+        )
+
 
     def agregar_integrante(self, usuario):
         # Agrega un usuario a la lista de integrantes si no está presente.
@@ -70,3 +86,16 @@ class Grupo:
             self.organizadores.remove(usuario)
             return True
         return False
+
+    def agregar_evento(self, evento_dict):
+        """Agrega un evento al grupo (evento_dict debe ser serializable)."""
+        if not isinstance(self.eventos, list):
+            self.eventos = []
+        self.eventos.append(evento_dict)
+
+    def eliminar_evento_por_id(self, id_evento):
+        if not self.eventos:
+            return False
+        before = len(self.eventos)
+        self.eventos = [e for e in self.eventos if e.get("id") != id_evento]
+        return len(self.eventos) < before

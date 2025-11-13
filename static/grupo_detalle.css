@@ -5,7 +5,10 @@
 
 /* Reset básico */
 * { box-sizing: border-box; margin:0; padding:0; }
-body { font-family: 'Montserrat',"Roboto",sans-serif; color:#fff; background:#033f63; }
+body { 
+  font-family: 'Montserrat',"Roboto"; 
+  color:#fff; 
+  background:#033f63; }
 
 /* NAV (mantenemos tu estilo) */
 header{

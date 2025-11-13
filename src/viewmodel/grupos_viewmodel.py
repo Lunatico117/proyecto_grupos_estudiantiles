@@ -2,8 +2,10 @@
 
 # Importamos la clase Grupo (nuestro modelo de datos de grupos)
 # y FirebaseService (para conectarnos y manipular Firebase)
+from src.model.evento import Evento
 from src.model.grupo import Grupo
 from src.services.firebase import FirebaseService
+from src.viewmodel.usuarios_viewmodel import UsuarioViewModel  
 
 
 class GruposViewModel:
@@ -34,17 +36,16 @@ class GruposViewModel:
         self.service.guardar_datos(ruta, grupo.to_dict())
         # Retornamos el diccionario para usarlo fácilmente en el frontend o más lógica
         return grupo.to_dict()
-
+    
     def obtener_grupo(self, id_grupo):
-        # Obtiene un grupo desde Firebase usando su ID
-        
-        # Pedimos los datos de Firebase
-        data = self.service.obtener_datos(f"{self.ruta_grupos}/{id_grupo}")
-        # Si no existe el grupo, devolvemos None
-        if not data:
-            return None
-        # Convertimos el diccionario de Firebase de vuelta a un objeto Grupo
-        return Grupo(**data)
+        datos = self.service.obtener_datos(f"{self.ruta_grupos}/{id_grupo}") or {}
+        if datos:
+            return Grupo.from_dict(datos)
+        return None
+
+    def guardar_grupo_dict(self, id_grupo, grupo_dict):
+        # actualiza todo el documento
+        self.service.actualizar_datos(f"{self.ruta_grupos}/{id_grupo}", grupo_dict)
 
     def listar_grupos(self):
         # Lista todos los grupos guardados en Firebase
@@ -142,3 +143,75 @@ class GruposViewModel:
 
         # Devolvemos la lista de grupos con los nombres incluidos
         return grupos
+
+    def crear_evento(self, id_grupo, fecha, hora, descripcion, creado_por_email):
+        """
+        Crea un evento y lo añade al arreglo 'eventos' dentro del grupo en Firebase.
+        """
+        grupo = self.obtener_grupo(id_grupo)
+        if not grupo:
+            return {"success": False, "error": "Grupo no encontrado"}
+        # Validación simple (puedes expandir)
+        if not (fecha and hora and descripcion):
+            return {"success": False, "error": "Datos incompletos"}
+
+        # Intentar obtener nombre del creador
+        try:
+            usuario_vm = UsuarioViewModel(self.service)
+            usuario = usuario_vm.obtener_usuario(creado_por_email)
+            nombre_creador = usuario.nombre if usuario else None
+        except Exception:
+            nombre_creador = None
+
+        evento = Evento(fecha=fecha, hora=hora, descripcion=descripcion,
+                        creado_por_email=creado_por_email,
+                        creado_por_nombre=nombre_creador)
+
+        # Añadir al grupo y actualizar en Firebase
+        grupo.agregar_evento(evento.to_dict())
+        self.guardar_grupo_dict(id_grupo, grupo.to_dict())
+        return {"success": True, "evento": evento.to_dict()}
+
+    def obtener_eventos_por_grupo(self, id_grupo):
+        grupo = self.obtener_grupo(id_grupo)
+        if not grupo:
+            return []
+        # devolver ordenados por fecha+hora asc (opcional)
+        try:
+            eventos = sorted(grupo.eventos, key=lambda e: (e.get("fecha",""), e.get("hora","")))
+        except Exception:
+            eventos = grupo.eventos or []
+        return eventos
+
+    def obtener_eventos_por_usuario(self, correo_usuario):
+        """
+        Recorre todos los grupos y devuelve los eventos de aquellos donde el usuario es integrante.
+        Devuelve lista de dicts con un campo adicional 'grupo_id' y 'grupo_nombre'.
+        """
+        grupos = self.service.obtener_datos(self.ruta_grupos) or {}
+        resultados = []
+        for gid, gdict in grupos.items():
+            integrantes = gdict.get("integrantes", [])
+            if correo_usuario in integrantes:
+                eventos = gdict.get("eventos", []) or []
+                for e in eventos:
+                    evt = e.copy()
+                    evt["grupo_id"] = gdict.get("id_grupo", gid)
+                    evt["grupo_nombre"] = gdict.get("nombre", "Sin nombre")
+                    resultados.append(evt)
+        # opcional: ordenar por fecha+hora asc
+        try:
+            resultados = sorted(resultados, key=lambda e: (e.get("fecha",""), e.get("hora","")))
+        except Exception:
+            pass
+        return resultados
+
+    def eliminar_evento(self, id_grupo, id_evento):
+        grupo = self.obtener_grupo(id_grupo)
+        if not grupo:
+            return {"success": False, "error": "Grupo no encontrado"}
+        eliminado = grupo.eliminar_evento_por_id(id_evento)
+        if eliminado:
+            self.guardar_grupo_dict(id_grupo, grupo.to_dict())
+            return {"success": True}
+        return {"success": False, "error": "Evento no encontrado"}

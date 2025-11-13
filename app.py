@@ -5,6 +5,7 @@ from src.viewmodel.auth_viewmodel import UsuarioAuthViewModel
 from src.services.firebase_global import firebase_global  # Asegurarse de que este objeto ya tenga db inicializado
 from src.viewmodel.usuarios_viewmodel import UsuarioViewModel
 from src.viewmodel.grupos_viewmodel import GruposViewModel
+from src.viewmodel.eventos_viewmodel import EventosViewModel
 
 usuario_vm = UsuarioViewModel()  # Inicializamos el ViewModel para manejar usuarios
 auth_vm = UsuarioAuthViewModel()
@@ -120,10 +121,7 @@ def cerrar_sesion():
 # Rutas protegidas: solo accesibles si hay sesión activa
 # ========================================================
 
-@app.route("/eventos")
-@login_requerido
-def eventos():
-    return render_template("eventos.html", usuario=session["usuario"])
+
 
 
 # ========================================================
@@ -430,19 +428,89 @@ def editar_grupo(id_grupo):
 
 
 # ---------- EVENTOS (stubs enlazables; implementarás luego) ----------
-@app.get("/grupos/<id_grupo>/eventos")
-@login_requerido
-def grupo_eventos(id_grupo):
-    # TODO: listar eventos del grupo
-    flash_clubes("Vista de eventos del grupo (próximamente).", "info")
-    return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
 
-@app.get("/grupos/<id_grupo>/eventos/nuevo")
+# Página que muestra eventos agregados de TODOS los grupos del usuario (menu /eventos)
+@app.route("/eventos")
 @login_requerido
-def grupo_evento_nuevo(id_grupo):
-    # TODO: formulario para crear evento
-    flash_clubes("Crear evento (próximamente).", "info")
-    return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+def eventos():
+    correo = correo_actual()
+    eventos_vm = EventosViewModel(firebase_global)
+    eventos_agg = eventos_vm.obtener_eventos_por_usuario(correo)
+    return render_template("eventos.html", eventos=eventos_agg, grupo=None, correo=correo)
+
+
+# Ver eventos de UN grupo específico (desde "Ver eventos" en detalle de grupo)
+# ------------------------------------------------------------------
+# RUTA: formulario para crear evento (solo organizadores)
+# ------------------------------------------------------------------
+@app.route("/clubes/<id_grupo>/crear_evento", methods=["GET", "POST"])
+@login_requerido
+def crear_evento(id_grupo):
+    grupos_vm = GruposViewModel(firebase_global)
+    eventos_vm = EventosViewModel(firebase_global)
+    grupo = grupos_vm.obtener_grupo(id_grupo)
+    correo = correo_actual()
+
+    if not grupo:
+        flash("Grupo no encontrado.", "danger")
+        return redirect(url_for("clubes"))
+
+    # Solo organizadores pueden crear eventos
+    if correo not in getattr(grupo, "organizadores", []):
+        flash("Solo los organizadores pueden crear eventos.", "danger")
+        return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+
+    if request.method == "POST":
+        fecha = request.form.get("fecha")
+        hora = request.form.get("hora")
+        descripcion = request.form.get("descripcion")
+
+        try:
+            resultado = eventos_vm.crear_evento(
+                id_grupo=id_grupo,
+                fecha=fecha,
+                hora=hora,
+                descripcion=descripcion,
+                creado_por_email=correo
+            )
+            if resultado["success"]:
+                flash("Evento creado con éxito", "success")
+            else:
+                flash(resultado["error"], "danger")
+        except Exception as e:
+            flash(f"Error al crear el evento: {e}", "danger")
+
+        return redirect(url_for("grupo_detalle", id_grupo=id_grupo))
+
+    return render_template("crear_evento.html", grupo=grupo, correo=correo)
+
+# ------------------------------------------------------------------
+# RUTA: ver todos los eventos del usuario (miembros)
+# ------------------------------------------------------------------
+@app.route("/eventos", methods=["GET"])
+def ver_eventos():
+    correo = session.get("correo")
+    if not correo:
+        flash("Debes iniciar sesión para ver eventos.", "danger")
+        return redirect(url_for("iniciar_sesion"))
+    # Si se pasa ?grupo_id=... mostramos solo ese grupo
+    filtro_grupo = request.args.get("grupo_id")
+    if filtro_grupo:
+        eventos = grupos_vm.obtener_eventos_por_grupo(filtro_grupo)
+        # añadir meta del grupo (nombre)
+        grupo = grupos_vm.obtener_grupo(filtro_grupo)
+        grupo_nombre = grupo.nombre if grupo else filtro_grupo
+        return render_template("eventos.html", eventos=eventos, grupo_id=filtro_grupo, grupo_nombre=grupo_nombre, correo=correo)
+    else:
+        eventos = grupos_vm.obtener_eventos_por_usuario(correo)
+        return render_template("eventos.html", eventos=eventos, grupo_id=None, grupo_nombre=None, correo=correo)
+
+# ------------------------------------------------------------------
+# RUTA: ver eventos de un grupo específico 
+# ------------------------------------------------------------------
+@app.route("/clubes/<id_grupo>/eventos", methods=["GET"])
+def ver_eventos_grupo(id_grupo):
+    return redirect(url_for("ver_eventos", grupo_id=id_grupo))
 
 # ========================================================
 # Ejecutar servidor

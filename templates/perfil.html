@@ -32,7 +32,7 @@
         <!-- LADO IZQUIERDO -->
         <div class="perfil-left">
             <div class="foto-container">
-                <img src="../img/user.png" alt="Foto de perfil">
+                <img src="../static/img/user.png">
                 <button class="cambiar-foto"><i class="fa-solid fa-camera"></i></button>
             </div>
             <h2 class="nombre">{{ usuario.nombre_completo }}</h2>
@@ -46,23 +46,23 @@
                     <span id="carrera">{{ usuario.carrera }}</span>
                 </p>
                 <p><strong>Contraseña:</strong> 
-                    <input type="password" id="contraseña" placeholder="*********">
+                    <!-- ✅ AÑADIDO readonly -->
+                    <input type="password" id="contraseña" placeholder="*********" readonly>
                 </p>
             </div>
 
-        <div class="perfil-buttons">
-            <button class="editar-btn" onclick="editarPerfil()"><i class="fa-solid fa-pen"></i> Editar</button>
-            <button class="guardar-btn hidden" onclick="guardarPerfil()"><i class="fa-solid fa-check"></i> Guardar</button>
-            <button class="cancelar-btn hidden" onclick="cancelarEdicion()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
-            <!-- Botón de eliminar usuario -->
-            <form method="POST" action="/perfil/eliminar" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.');">
-                <button type="submit" class="eliminar-btn">
-                    <i class="fa-solid fa-trash"></i> Eliminar Usuario
-                </button>
-</form>
-
-        </div>
-
+            <div class="perfil-buttons">
+                <button class="editar-btn" onclick="editarPerfil()"><i class="fa-solid fa-pen"></i> Editar</button>
+                <button class="guardar-btn hidden" onclick="guardarPerfil()"><i class="fa-solid fa-check"></i> Guardar</button>
+                <button class="cancelar-btn hidden" onclick="cancelarEdicion()"><i class="fa-solid fa-xmark"></i> Cancelar</button>
+                
+                <!-- Botón de eliminar usuario -->
+                <form method="POST" action="/perfil/eliminar" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción es irreversible.');">
+                    <button type="submit" class="eliminar-btn">
+                        <i class="fa-solid fa-trash"></i> Eliminar Usuario
+                    </button>
+                </form>
+            </div>
         </div>
 
         <!-- LADO DERECHO -->
@@ -83,16 +83,18 @@
                 </ul>
             </div>
         </div>
-
     </div>
 </section>
 
 <script>
 function editarPerfil() {
+    // ✅ Habilitar edición visual
     document.querySelector('#nombre_completo').contentEditable = true;
     document.querySelector('#carrera').contentEditable = true;
     document.querySelector('#bio').removeAttribute('readonly');
     document.querySelector('#contraseña').removeAttribute('readonly');
+
+    // ✅ Mostrar/ocultar botones
     document.querySelector('.editar-btn').classList.add('hidden');
     document.querySelector('.guardar-btn').classList.remove('hidden');
     document.querySelector('.cancelar-btn').classList.remove('hidden');
@@ -103,36 +105,35 @@ function cancelarEdicion() {
 }
 
 function guardarPerfil() {
-    const nombre_completo = document.querySelector('#nombre_completo').innerText;
-    const carrera = document.querySelector('#carrera').innerText;
-    const bio = document.querySelector('#bio').value;
-    const contraseña = document.querySelector('#contraseña').value;
+    const nombre_completo = document.querySelector('#nombre_completo').innerText.trim();
+    const carrera = document.querySelector('#carrera').innerText.trim();
+    const bio = document.querySelector('#bio').value.trim();
+    const contraseña = document.querySelector('#contraseña').value.trim();
 
     fetch('/perfil', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
             nombre_completo: nombre_completo,
-            password: contraseña,  // coincide con ViewModel
+            password: contraseña,
             carrera: carrera,
-            descripcion_personal: bio  // coincide con ViewModel
+            descripcion_personal: bio
         })
-
     })
     .then(res => res.json())
     .then(data => {
-        if(data.success){
+        if (data.success) {
             alert('Perfil actualizado correctamente');
             location.reload();
         } else {
             alert('Error al actualizar perfil');
         }
+    })
+    .catch(err => {
+        console.error(err);
+        alert('Ocurrió un error al guardar el perfil.');
     });
 }
-
-
-
-
 </script>
 </body>
 </html>

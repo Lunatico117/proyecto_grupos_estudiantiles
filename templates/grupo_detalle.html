@@ -110,12 +110,14 @@
             <i class="fa-solid fa-arrow-left"></i> Volver
           </a>
 
-          <a class="btn" href="{{ url_for('grupo_eventos', id_grupo=grupo.id_grupo) }}">
+          {% if correo in grupo.integrantes %}
+          <a class="btn" href="{{ url_for('ver_eventos', id_grupo=grupo.id_grupo) }}">
             <i class="fa-solid fa-calendar-days"></i> Ver eventos
           </a>
+          {% endif %}
 
-          {% if correo in (grupo.organizadores or []) %}
-            <a class="btn" href="{{ url_for('grupo_evento_nuevo', id_grupo=grupo.id_grupo) }}">
+          {% if correo in grupo.organizadores %}
+            <a class="btn" href="{{ url_for('crear_evento', id_grupo=grupo.id_grupo) }}" >
               <i class="fa-solid fa-plus"></i> Crear evento
             </a>
           {% endif %}

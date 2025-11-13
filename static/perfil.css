@@ -276,3 +276,22 @@ nav ul li a:hover {
         padding-bottom: 2rem;
     }
 }
+
+[contenteditable="true"] {
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    color: #033f63; /* ✅ texto visible */
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+[contenteditable="true"]:hover {
+    background: #fff7d6; /* un amarillo claro */
+    transition: background 0.2s;
+}
+
+
+/* ✅ AÑADIDO: clase que oculta botones */
+.hidden {
+    display: none;
+}

@@ -1,0 +1,152 @@
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Montserrat', 'Roboto';
+  background: linear-gradient(180deg, #28666e 40%, #033f63 60%);
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* Navbar igual que antes */
+header {
+  background: #7c9885;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .5rem 2rem;
+  border-bottom: 4px solid #b5b682;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+.nav-left .home-btn {
+  color: #fedc97;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: transform .2s;
+}
+.nav-left .home-btn:hover { transform: scale(1.1); }
+nav ul { list-style: none; display: flex; gap: 2rem; }
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: color .3s;
+  margin: 0 8rem;
+}
+nav ul li a:hover { color: #fedc97; }
+.nav-right img { height: 45px; }
+
+/* Contenedor principal */
+.container {
+  padding: 120px 20px 60px; /* deja espacio para el header */
+  display: flex;
+  justify-content: center;
+}
+
+/* Tarjeta del formulario */
+.main-card {
+  background: #7c9885;
+  border: 1px solid rgba(181,182,130,.35);
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+  padding: 26px 28px 22px;
+  max-width: 600px;
+  width: 100%;
+  display: grid;
+  gap: 18px;
+}
+
+/* Título */
+.main-card h1 {
+  font-size: 1.8rem;
+  color: #fedc97;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+}
+.main-card .grupo-nombre {
+  color: #033f63;
+  background: #b5b682;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+/* Formulario */
+.form-evento {
+  display: grid;
+  gap: 14px;
+}
+.form-row {
+  display: grid;
+  gap: 6px;
+}
+.form-evento label {
+  font-weight: 800;
+  color: #fedc97;
+  font-size: .95rem;
+}
+.form-evento input,
+.form-evento textarea {
+  width: 100%;
+  border: 1px solid rgba(181,182,130,.35);
+  border-radius: 10px;
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  outline: none;
+  padding: 10px 12px;
+  font: inherit;
+}
+.form-evento textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* Acciones */
+.acciones {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  border-top: 1px dashed rgba(255,255,255,.18);
+  padding-top: 12px;
+  margin-top: 6px;
+}
+
+/* Botones coherentes */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #b5b682;
+  color: #033f63;
+  border: none;
+  border-radius: 999px;
+  padding: .5rem 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter .2s, transform .1s, background .2s, box-shadow .2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+}
+.btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+.btn i { font-size: .95rem; }
+
+.btn-link {
+  background: #cf5a3d;
+  color: #fff;
+}
+.btn-link:hover { background: #e0704e; }
+
+/* Responsivo */
+@media (max-width: 640px) {
+  nav ul li a { margin: 0; }
+  .acciones { flex-direction: column; }
+  .btn { width: 100%; justify-content: center; }
+}

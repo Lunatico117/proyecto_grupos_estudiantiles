@@ -1,0 +1,157 @@
+/* =========================================================
+   EVENTOS – coherente con grupo_detalle y crear_evento
+   Paleta: #033f63, #28666e, #7c9885, #b5b682, #fedc97
+   ========================================================= */
+
+/* Reset y fuente */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Montserrat', 'Roboto';
+  background: linear-gradient(180deg, #28666e 40%, #033f63 60%);
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* ===== NAVBAR ===== */
+header {
+  background: #7c9885;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .5rem 2rem;
+  border-bottom: 4px solid #b5b682;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+.nav-left .home-btn {
+  color: #fedc97;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: transform .2s;
+}
+.nav-left .home-btn:hover { transform: scale(1.1); }
+nav ul { list-style: none; display: flex; gap: 2rem; }
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: color .3s;
+  margin: 0 8rem;
+}
+nav ul li a:hover { color: #fedc97; }
+.nav-right img { height: 45px; }
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.container {
+  padding: 120px 20px 60px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== TARJETA PRINCIPAL ===== */
+.main-card {
+  background: #7c9885;
+  border: 1px solid rgba(181,182,130,.35);
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+  padding: 26px 28px;
+  max-width: 800px;
+  width: 100%;
+  display: grid;
+  gap: 16px;
+}
+
+/* ===== TITULOS ===== */
+.main-card h1 {
+  font-size: 2rem;
+  color: #fedc97;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0,0,0,.15);
+}
+.main-card h2 {
+  text-align: center;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.grupo-nombre {
+  color: #033f63;
+  background: #b5b682;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+/* ===== LISTA DE EVENTOS ===== */
+.lista-eventos {
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.evento-item {
+  background: rgba(3,63,99,.22);
+  border: 1px solid rgba(181,182,130,.30);
+  border-radius: 12px;
+  padding: 12px 14px;
+  transition: transform .12s ease, box-shadow .12s ease, background .18s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+.evento-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0,0,0,.22);
+  background: rgba(3,63,99,.26);
+}
+
+/* ===== DETALLE INTERNO DEL EVENTO ===== */
+.meta {
+  color: #fedc97;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.meta .grupo {
+  color: #033f63;
+  background: #b5b682;
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-left: 4px;
+  font-weight: 800;
+}
+.descripcion {
+  color: #e9eef1;
+  font-size: 1rem;
+  line-height: 1.4;
+  background: rgba(3,63,99,.18);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.pie {
+  margin-top: 6px;
+  text-align: right;
+  color: #ddd;
+  font-size: .9rem;
+}
+
+/* ===== MENSAJE SIN EVENTOS ===== */
+.sin-eventos {
+  text-align: center;
+  color: #fedc97;
+  background: rgba(3,63,99,.2);
+  padding: 1rem;
+  border-radius: 12px;
+  font-weight: 700;
+  border: 1px dashed rgba(181,182,130,.35);
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 640px) {
+  nav ul li a { margin: 0; }
+  .main-card { padding: 20px; }
+  .meta { font-size: .95rem; }
+  .descripcion { font-size: .95rem; }
+}

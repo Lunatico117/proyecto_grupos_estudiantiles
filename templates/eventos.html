@@ -1,40 +1,67 @@
+<!-- templates/eventos.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNAL Grupos Estudiantiles</title>
-    <link rel="stylesheet" href="../static/styles.css">
-    <link rel="icon" href="../static/img/Logo.png" type="image/jpeg">
-    <!-- Iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Eventos de Grupos Estudiantiles</title>
+   <link rel="stylesheet" href="../static/eventos.css"/>
+   <link rel="icon" href="../../static/img/Logo.png" type="image/png"/>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-
 <body>
-    <!-- Barra de navegacion -->
-    <header>
-        <div class="nav-left">
-            <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="/">INICIO</a></li>
-                <li><a href="/clubes">CLUBES</a></li>
-                <li><a href="/eventos">EVENTOS</a></li>
-                <li><a href="/perfil">PERFIL</a></li>
-            </ul>
-        </nav>
-        <div class="nav-right">
-            <img src="../static/img/Logo.png" alt="Logo Grupos Estudiantiles">
-        </div>
-    </header>
+   <header>
+       <div class="nav-left">
+           <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
+       </div>
+       <nav>
+           <ul>
+               <li><a href="/">INICIO</a></li>
+               <li><a href="/clubes">CLUBES</a></li>
+               <li><a href="/eventos">EVENTOS</a></li>
+               <li><a href="/perfil">PERFIL</a></li>
+           </ul>
+       </nav>
+       <div class="nav-right">
+           <img src="../../static/img/Logo.png" alt="Logo Grupos Estudiantiles">
+       </div>
+   </header>
 
+   <main class="container">
+     <div class="main-card">
+       <h1>Eventos</h1>
+       {% if grupo_id %}
+         <h2>Eventos del grupo: <span class="grupo-nombre">{{ grupo_nombre }}</span></h2>
+       {% endif %}
 
-    <section class="eventos">
-
-    </section>
-
-
-
+       {% if eventos %}
+         <ul class="lista-eventos">
+           {% for e in eventos %}
+             <li class="evento-item">
+               <div class="meta">
+                 <strong>{{ e.fecha }} {{ e.hora }}</strong>
+                 {% if e.grupo_nombre %}
+                   <span class="grupo"> — {{ e.grupo_nombre }}</span>
+                 {% endif %}
+               </div>
+               <div class="descripcion">{{ e.descripcion }}</div>
+               <div class="pie">
+                   <small>
+                       Creado por:
+                       {% if e.creado_por_nombre %}
+                           {{ e.creado_por_nombre }}
+                       {% else %}
+                           {{ e.creado_por_email }}
+                       {% endif %}
+                   </small>
+               </div>
+             </li>
+           {% endfor %}
+         </ul>
+       {% else %}
+         <p class="sin-eventos">No hay eventos para mostrar.</p>
+       {% endif %}
+     </div>
+   </main>
 </body>
 </html>
