@@ -1,21 +1,34 @@
 import firebase_admin
 from firebase_admin import credentials, db
 import os
+import json
 from dotenv import load_dotenv
 
-load_dotenv()  # Carga las variables de entorno desde .env
+load_dotenv()  # Carga variables locales si estás en desarrollo
 
-# Obtener las rutas desde las variables de entorno
-FIREBASE_CRED_PATH = os.getenv('FIREBASE_CRED_PATH')
+# Variables de entorno necesarias
+FIREBASE_CREDENTIALS = os.getenv('FIREBASE_CREDENTIALS')
 FIREBASE_DB_URL = os.getenv('FIREBASE_DB_URL')
 
-if not FIREBASE_CRED_PATH or not FIREBASE_DB_URL:
-    raise ValueError("Faltan variables de entorno FIREBASE_CRED_PATH o FIREBASE_DB_URL")
+if not FIREBASE_CREDENTIALS:
+    raise ValueError("Falta la variable de entorno FIREBASE_CREDENTIALS")
+
+if not FIREBASE_DB_URL:
+    raise ValueError("Falta la variable de entorno FIREBASE_DB_URL")
 
 # Inicializar Firebase solo una vez
 if not firebase_admin._apps:
-    cred = credentials.Certificate(FIREBASE_CRED_PATH)
-    firebase_admin.initialize_app(cred, {'databaseURL': FIREBASE_DB_URL})
+    # Convertir el JSON almacenado en la variable de entorno en un dict
+    cred_dict = json.loads(FIREBASE_CREDENTIALS)
+
+    # Crear credenciales desde el dict (sin archivo físico)
+    cred = credentials.Certificate(cred_dict)
+
+    # Inicializar Firebase
+    firebase_admin.initialize_app(cred, {
+        'databaseURL': FIREBASE_DB_URL
+    })
+
 
 
 class FirebaseService:
@@ -42,3 +55,4 @@ class FirebaseService:
         datos_actuales = self.obtener_datos(ruta) or {}
         datos_actuales[campo] = nuevo_valor
         self.actualizar_datos(ruta, datos_actuales)
+
