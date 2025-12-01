@@ -26,6 +26,10 @@ class UsuarioAuthViewModel:
         if not es_correo_valido(correo):
             return {'success': False, 'error': 'El correo debe ser institucional @unal.edu.co'}
 
+        # 1.1 Validar longitud minima de la contrasena
+        if len(password or "") < 8:
+            return {'success': False, 'error': 'La contrasena debe tener al menos 8 caracteres.'}
+
         # 2. Crear clave 'segura' para almacenar usuario en Firebase
         correo_key = correo.replace('@', '_at_').replace('.', '_dot_')
         ruta_usuario = f"usuarios/{correo_key}"
@@ -78,7 +82,9 @@ class UsuarioAuthViewModel:
         if not es_correo_valido(correo):
             return {'success': False, 'error': 'Correo institucional incorrecto.'}
 
-        if len(password) < 6:
-            return {'success': False, 'error': 'La contraseña debe tener al menos 6 caracteres.'}
+        if len(password) < 8:
+            return {'success': False, 'error': 'La contrasena debe tener al menos 8 caracteres.'}
 
         return {'success': True}
+
+
