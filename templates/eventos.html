@@ -27,6 +27,18 @@
        </div>
    </header>
 
+   <!-- Flash messages -->
+   <div class="flash">
+     {% with messages = get_flashed_messages(with_categories=true) %}
+       {% if messages %}
+         {% for category, message in messages %}
+           {% set cls = category.replace('clubes', '').strip() %}
+           <div class="msg {{ cls }}">{{ message }}</div>
+         {% endfor %}
+       {% endif %}
+     {% endwith %}
+   </div>
+
    <main class="container">
      <div class="main-card">
        <h1>Eventos</h1>
@@ -63,5 +75,20 @@
        {% endif %}
      </div>
    </main>
+   <script>
+     // Auto-ocultar y desvanecer mensajes flash
+     (function () {
+       const flashes = document.querySelectorAll('.flash .msg');
+       if (!flashes.length) return;
+       setTimeout(() => {
+         flashes.forEach(el => {
+           el.style.transition = 'opacity .35s ease, transform .35s ease';
+           el.style.opacity = '0';
+           el.style.transform = 'translateY(-8px)';
+           setTimeout(() => el.remove(), 420);
+         });
+       }, 6500);
+     })();
+   </script>
 </body>
 </html>

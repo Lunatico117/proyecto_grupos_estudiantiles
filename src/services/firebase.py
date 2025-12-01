@@ -19,10 +19,9 @@ if not FIREBASE_DB_URL:
 # Inicializar Firebase solo una vez
 if not firebase_admin._apps:
     # Convertir el JSON almacenado en la variable de entorno en un dict
-    cred_dict = json.loads(FIREBASE_CREDENTIALS)
 
     # Crear credenciales desde el dict (sin archivo físico)
-    cred = credentials.Certificate(cred_dict)
+    cred = credentials.Certificate(FIREBASE_CREDENTIALS)
 
     # Inicializar Firebase
     firebase_admin.initialize_app(cred, {

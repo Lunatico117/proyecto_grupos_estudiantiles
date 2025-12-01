@@ -157,14 +157,18 @@ nav ul li a:hover{ color:#fedc97 }
 /* Flashes locales en la card de grupo */
 .flash-local { margin-top: 6px; }
 .flash-local .msg{
-  background:#4dec62ab; color:#ffffff;
-  border-left:4px solid #b5b682;
-  padding:.6rem .8rem; border-radius:10px;
-  margin:.45rem 0; box-shadow:0 4px 12px rgba(0,0,0,.18);
+  background: rgba(181, 182, 130, 0.2);
+  color: #f6e4aa;
+  border-left: 4px solid #fedc97;
+  padding: .7rem .95rem;
+  border-radius: 10px;
+  margin: .45rem 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+  backdrop-filter: blur(3px);
   font-weight:700;
 }
 
 /* Variantes opcionales por nivel (si quieres diferenciar colores) */
-.flash-local .msg.success{ border-left-color:#8fd19e; }
-.flash-local .msg.warning{ border-left-color:#e9aa17; }
-.flash-local .msg.danger{  border-left-color:#e0704e; }
+.flash-local .msg.success{ background: rgba(124,152,133,0.28); color: #f6e4aa; border-left-color:#b5b682; }
+.flash-local .msg.warning{ background: rgba(255,244,216,0.2); color: #f6e4aa; border-left-color:#f0c36d; }
+.flash-local .msg.danger{  background: rgba(255,229,229,0.18); color: #f4c3c3; border-left-color:#f57a8f; }

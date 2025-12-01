@@ -11,6 +11,32 @@ body {
     color: #fff;
 }
 
+/* Flash messages */
+.flash {
+    width: 100%;
+    margin: 0 0 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.flash .msg {
+    background: rgba(181, 182, 130, 0.2);
+    color: #f6e4aa;
+    border-left: 4px solid #b5b682;
+    border: 1px solid rgba(181, 182, 130, 0.35);
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(3px);
+}
+
+.flash .msg.success { background: rgba(124, 152, 133, 0.28); color: #f6e4aa; border-color: #b5b682; }
+.flash .msg.danger { background: rgba(255, 229, 229, 0.18); color: #f4c3c3; border-color: #f57a8f; }
+.flash .msg.warning { background: rgba(255, 244, 216, 0.2); color: #f6e4aa; border-color: #f0c36d; }
+.flash .msg.info { background: rgba(3, 63, 99, 0.25); color: #e8f1fb; border-color: #6ea8fe; }
+
 /* Barra de navegación */
 
 header {

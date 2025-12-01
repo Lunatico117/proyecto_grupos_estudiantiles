@@ -37,7 +37,7 @@
               {% if 'clubes' in category %}
                 {# opcional: quita la palabra "clubes" de la clase para no afectar estilos #}
                 {% set cls = category.replace('clubes', '').strip() %}
-                <div class="msg {{ cls }}" style="background:#7c9885;color:#033f63;border-left:4px solid #b5b682;padding:.6rem .8rem;border-radius:8px;margin:.5rem 0;">
+                <div class="msg {{ cls }}">
                   {{ message }}
                 </div>
               {% endif %}
@@ -57,23 +57,7 @@
               el.style.opacity = '0';
               setTimeout(() => el.remove(), 400);
             });
-          }, 3500);
-        })();
-      </script>
-
-
-      <script>
-        // Auto-ocultar notificaciones flash
-        (function () {
-          const flashes = document.querySelectorAll('.flash .msg');
-          if (!flashes.length) return;
-          setTimeout(() => {
-            flashes.forEach(el => {
-              el.style.transition = 'opacity .35s ease';
-              el.style.opacity = '0';
-              setTimeout(() => el.remove(), 400);
-            });
-          }, 3500); // 3.5s en pantalla
+          }, 6500);
         })();
       </script>
       <!-- Título -->

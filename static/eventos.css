@@ -155,3 +155,34 @@ nav ul li a:hover { color: #fedc97; }
   .meta { font-size: .95rem; }
   .descripcion { font-size: .95rem; }
 }
+
+/* Flash (mensajes) */
+.flash {
+  position: relative;
+  top: auto;
+  left: auto;
+  transform: none;
+  width: 100%;
+  margin: 0 0 12px;
+  z-index: 3;
+}
+.flash .msg {
+  background: rgba(181, 182, 130, 0.2);
+  color: #f6e4aa;
+  border-left: 4px solid #fedc97;
+  padding: 0.7rem 0.95rem;
+  border-radius: 10px;
+  margin: 0.35rem 0;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transform: translateY(-6px);
+  animation: flash-in 0.25s ease forwards;
+}
+.flash .msg.success { background: rgba(124, 152, 133, 0.28); color: #f6e4aa; border-color: #b5b682; }
+.flash .msg.danger { background: rgba(255, 229, 229, 0.18); color: #f4c3c3; border-color: #f57a8f; }
+.flash .msg.warning { background: rgba(255, 244, 216, 0.2); color: #f6e4aa; border-color: #f0c36d; }
+.flash .msg.info { background: rgba(3, 63, 99, 0.25); color: #e8f1fb; border-color: #6ea8fe; }
+@keyframes flash-in {
+  to { opacity: 1; transform: translateY(0); }
+}

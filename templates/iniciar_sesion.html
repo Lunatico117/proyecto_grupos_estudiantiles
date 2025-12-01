@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión | UNAL Grupos Estudiantiles</title>
+    <title>Inicio de Sesion | UNAL Grupos Estudiantiles</title>
     <link rel="stylesheet" href="../static/iniciar_sesion.css">
     <link rel="icon" href="../static/img/Logo.png" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
-    <!-- Barra de navegación -->
+    <!-- Barra de navegacion -->
     <header>
         <div class="nav-left">
             <a href="/" class="home-btn"><i class="fa-solid fa-house"></i></a>
@@ -28,13 +28,24 @@
         </div>
     </header>
 
-    <!-- Formulario de inicio de sesión -->
+    <!-- Formulario de inicio de sesion -->
     <section class="login-section">
         <div class="login-container">
             <div class="login-logo">
                 <img src="../static/img/Logo.png" alt="Logo UNAL">
             </div>
-            <h2>INICIO DE SESIÓN</h2>
+            <h2>INICIO DE SESION</h2>
+
+            <div class="flash" aria-live="polite" role="status">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            {% set cls = category.replace('clubes', '').strip() %}
+                            <div class="msg {{ cls or 'info' }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
 
             <form action="/inicio_sesion" method="POST">
                 <div class="input-group">
@@ -43,15 +54,15 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                    <label for="password">Contrasena</label>
+                    <input type="password" id="password" name="password" placeholder="Ingresa tu contrasena" required>
                 </div>
 
                 <button type="submit" class="login-btn">
-                    <i class="fa-solid fa-lock"></i> Iniciar Sesión
+                    <i class="fa-solid fa-lock"></i> Iniciar Sesion
                 </button>
 
-                <p class="signup-text">¿No tienes cuenta? <a href="/registro">Regístrate</a></p>
+                <p class="signup-text">No tienes cuenta? <a href="/registro">Registrate</a></p>
             </form>
 
             <div class="social-icons">
@@ -60,5 +71,20 @@
             </div>
         </div>
     </section>
+
+    <script>
+        // Auto-ocultar notificaciones flash
+        (function () {
+            const flashes = document.querySelectorAll('.flash .msg');
+            if (!flashes.length) return;
+            setTimeout(() => {
+                flashes.forEach(el => {
+                    el.style.transition = 'opacity .35s ease';
+                    el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 400);
+                });
+            }, 6500);
+        })();
+    </script>
 </body>
 </html>
