@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from src.model.evento import Evento
 from src.model.grupo import Grupo
 from src.services.firebase_global import firebase_global
@@ -8,9 +10,46 @@ class EventosViewModel:
         self.service = service if service else firebase_global
         self.ruta_grupos = "grupos"
 
+    def _parsear_fecha_evento(self, evento):
+        fecha = evento.get("fecha")
+        hora = (evento.get("hora") or "00:00").strip()
+        if not fecha:
+            return None
+
+        intentos = (
+            (f"{fecha} {hora}", "%Y-%m-%d %H:%M"),
+            (f"{fecha} {hora}", "%Y-%m-%d %H:%M:%S"),
+            (fecha, "%Y-%m-%d"),
+        )
+        for valor, formato in intentos:
+            try:
+                return datetime.strptime(valor, formato)
+            except ValueError:
+                continue
+        return None
+
+    def _limpiar_eventos_vencidos(self, id_grupo, grupo):
+        if not grupo or not getattr(grupo, "eventos", None):
+            return
+
+        ahora = datetime.now()
+        vigentes = []
+        for evento in grupo.eventos:
+            dt_evento = self._parsear_fecha_evento(evento)
+            if dt_evento and dt_evento < ahora:
+                continue
+            vigentes.append(evento)
+
+        if len(vigentes) != len(grupo.eventos):
+            grupo.eventos = vigentes
+            self._guardar_grupo(id_grupo, grupo.to_dict())
+
     def _obtener_grupo(self, id_grupo):
         data = self.service.obtener_datos(f"{self.ruta_grupos}/{id_grupo}")
-        return Grupo.from_dict(data) if data else None
+        grupo = Grupo.from_dict(data) if data else None
+        if grupo:
+            self._limpiar_eventos_vencidos(id_grupo, grupo)
+        return grupo
 
     def _guardar_grupo(self, id_grupo, grupo_dict):
         self.service.actualizar_datos(f"{self.ruta_grupos}/{id_grupo}", grupo_dict)
@@ -42,11 +81,15 @@ class EventosViewModel:
         grupos = self.service.obtener_datos(self.ruta_grupos) or {}
         eventos_usuario = []
         for gid, gdata in grupos.items():
-            if correo in gdata.get("integrantes", []):
-                for e in gdata.get("eventos", []):
+            if not gdata:
+                continue
+            grupo = Grupo.from_dict(gdata)
+            self._limpiar_eventos_vencidos(gid, grupo)
+            if correo in getattr(grupo, "integrantes", []):
+                for e in grupo.eventos:
                     ev = e.copy()
                     ev["grupo_id"] = gid
-                    ev["grupo_nombre"] = gdata.get("nombre", "Sin nombre")
+                    ev["grupo_nombre"] = getattr(grupo, "nombre", "Sin nombre")
                     eventos_usuario.append(ev)
         return sorted(eventos_usuario, key=lambda e: (e.get("fecha", ""), e.get("hora", "")))
 

@@ -2,6 +2,8 @@
 
 # Importamos la clase Grupo (nuestro modelo de datos de grupos)
 # y FirebaseService (para conectarnos y manipular Firebase)
+from datetime import datetime
+
 from src.model.evento import Evento
 from src.model.grupo import Grupo
 from src.services.firebase import FirebaseService
@@ -40,7 +42,9 @@ class GruposViewModel:
     def obtener_grupo(self, id_grupo):
         datos = self.service.obtener_datos(f"{self.ruta_grupos}/{id_grupo}") or {}
         if datos:
-            return Grupo.from_dict(datos)
+            grupo = Grupo.from_dict(datos)
+            self._limpiar_eventos_vencidos(id_grupo, grupo)
+            return grupo
         return None
 
     def guardar_grupo_dict(self, id_grupo, grupo_dict):
@@ -144,6 +148,40 @@ class GruposViewModel:
         # Devolvemos la lista de grupos con los nombres incluidos
         return grupos
 
+    def _parsear_fecha_evento(self, evento):
+        fecha = evento.get("fecha")
+        hora = (evento.get("hora") or "00:00").strip()
+        if not fecha:
+            return None
+
+        intentos = (
+            (f"{fecha} {hora}", "%Y-%m-%d %H:%M"),
+            (f"{fecha} {hora}", "%Y-%m-%d %H:%M:%S"),
+            (fecha, "%Y-%m-%d"),
+        )
+        for valor, formato in intentos:
+            try:
+                return datetime.strptime(valor, formato)
+            except ValueError:
+                continue
+        return None
+
+    def _limpiar_eventos_vencidos(self, id_grupo, grupo):
+        if not grupo or not getattr(grupo, "eventos", None):
+            return
+
+        ahora = datetime.now()
+        vigentes = []
+        for evento in grupo.eventos:
+            dt_evento = self._parsear_fecha_evento(evento)
+            if dt_evento and dt_evento < ahora:
+                continue
+            vigentes.append(evento)
+
+        if len(vigentes) != len(grupo.eventos):
+            grupo.eventos = vigentes
+            self.guardar_grupo_dict(id_grupo, grupo.to_dict())
+
     def crear_evento(self, id_grupo, fecha, hora, descripcion, creado_por_email):
         """
         Crea un evento y lo añade al arreglo 'eventos' dentro del grupo en Firebase.
@@ -191,13 +229,17 @@ class GruposViewModel:
         grupos = self.service.obtener_datos(self.ruta_grupos) or {}
         resultados = []
         for gid, gdict in grupos.items():
-            integrantes = gdict.get("integrantes", [])
-            if correo_usuario in integrantes:
-                eventos = gdict.get("eventos", []) or []
-                for e in eventos:
+            if not gdict:
+                continue
+
+            grupo = Grupo.from_dict(gdict)
+            self._limpiar_eventos_vencidos(gid, grupo)
+
+            if correo_usuario in grupo.integrantes:
+                for e in grupo.eventos:
                     evt = e.copy()
-                    evt["grupo_id"] = gdict.get("id_grupo", gid)
-                    evt["grupo_nombre"] = gdict.get("nombre", "Sin nombre")
+                    evt["grupo_id"] = getattr(grupo, "id_grupo", gid)
+                    evt["grupo_nombre"] = getattr(grupo, "nombre", "Sin nombre")
                     resultados.append(evt)
         # opcional: ordenar por fecha+hora asc
         try:
