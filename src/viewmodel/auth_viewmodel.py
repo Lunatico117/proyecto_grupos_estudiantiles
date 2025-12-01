@@ -20,7 +20,7 @@ class UsuarioAuthViewModel:
 
     def registrar_usuario(self, nombre, correo, password, carrera):
         """
-        Registra un nuevo usuario en Firebase
+        Registra un nuevo usuario en Firebase y devuelve los datos listos para sesión.
         """
         # 1. Validar correo institucional
         if not es_correo_valido(correo):
@@ -51,7 +51,12 @@ class UsuarioAuthViewModel:
         # 5. Guardar en Firebase
         self.service.guardar_datos(ruta_usuario, usuario.to_dict())
 
-        return {'success': True, 'mensaje': f'Usuario {nombre} registrado correctamente.'}
+        # Devolver los datos completos para iniciar sesión automáticamente
+        return {
+            'success': True,
+            'mensaje': f'Usuario {nombre} registrado correctamente.',
+            'usuario': usuario.to_dict()
+        }
 
     def iniciar_sesion(self, correo, password):
         """

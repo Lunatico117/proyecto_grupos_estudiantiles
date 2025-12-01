@@ -13,6 +13,16 @@ grupos_vm = GruposViewModel()
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # Necesario para manejar sesiones
 
+# =============================
+# Función común para iniciar sesión en Flask
+# =============================
+def iniciar_sesion_flask(usuario_data):
+    session["usuario"] = {
+        "correo": usuario_data["correo"],
+        "nombre": usuario_data["nombre_completo"],
+        "carrera": usuario_data["carrera"]
+    }
+
 # =============================================
 #Flash de los mensajes clubes
 #==============================================
@@ -63,7 +73,9 @@ def registro_usuario():
 
         resultado = auth_vm.registrar_usuario(nombre, correo, password, carrera)
         if resultado["success"]:
-            flash("Registro exitoso", "success")
+            # Inicia sesión automáticamente
+            iniciar_sesion_flask(resultado["usuario"])
+            flash(f"Registro exitoso. Bienvenido {resultado['usuario']['nombre_completo']}!", "success")
             return redirect(url_for("index"))
         else:
             flash(resultado["error"], "danger")
@@ -81,25 +93,10 @@ def inicio_sesion():
         resultado = auth_vm.iniciar_sesion(correo, password)
 
         if resultado["success"]:
-            # Convertimos el correo a la clave usada en Firebase
-            correo_key = correo.replace(".", "_dot_").replace("@", "_at_")
-            ruta = f"usuarios/{correo_key}"
-            # Traemos los datos completos desde Firebase
-            datos_usuario = firebase_global.obtener_datos(ruta)
-
-            if datos_usuario is None:
-                flash("No se encontraron datos del usuario en Firebase.", "danger")
-                return redirect(url_for("inicio_sesion"))
-
-            # Guardamos en sesión los datos reales del usuario
-            session["usuario"] = {
-                "correo": correo,
-                "nombre": datos_usuario.get("nombre_completo", "Usuario"),  # Ahora sí será el nombre real
-                "carrera": datos_usuario.get("carrera", "")
-            }
-
-            flash(f"Bienvenido, {session['usuario']['nombre']}!", "success")
-            return redirect(url_for("index"))  # Redirige al dashboard automáticamente
+            # Usamos la función común para iniciar sesión
+            iniciar_sesion_flask(resultado["usuario"])
+            flash(f"Bienvenido, {resultado['usuario']['nombre_completo']}!", "success")
+            return redirect(url_for("index"))
         else:
             flash(resultado["error"], "danger")
 
