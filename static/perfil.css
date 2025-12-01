@@ -14,6 +14,32 @@ body {
     overflow-y: auto;
 }
 
+/* Flash messages */
+.flash {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(90%, 620px);
+    z-index: 40;
+}
+
+.flash .msg {
+    margin-bottom: 10px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    background: rgba(3, 63, 99, 0.25);
+    color: #e8f1fb;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(6px);
+}
+
+.flash .msg.success { background: rgba(124, 152, 133, 0.28); color: #f6e4aa; border-color: #b5b682; }
+.flash .msg.danger  { background: rgba(255, 229, 229, 0.18); color: #f4c3c3; border-color: #f57a8f; }
+.flash .msg.warning { background: rgba(255, 244, 216, 0.2); color: #f6e4aa; border-color: #f0c36d; }
+.flash .msg.info    { background: rgba(3, 63, 99, 0.25); color: #e8f1fb; border-color: #6ea8fe; }
+
 /* Barra de navegación */
 header {
     background-color: #7c9885;

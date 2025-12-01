@@ -148,7 +148,14 @@ def perfil():
                 "carrera": data.get("carrera"),
                 "bio": data.get("descripcion_personal")
             })
-        return {"success": resultado["success"]}
+            flash("Perfil actualizado con exito", "success")
+        else:
+            flash(resultado.get("error") or "No se pudo actualizar el perfil.", "danger")
+
+        return {
+            "success": resultado["success"],
+            "mensaje": "Perfil actualizado con exito" if resultado["success"] else (resultado.get("error") or "No se pudo actualizar el perfil.")
+        }
 
     # GET → mostrar perfil
     usuario_obj = usuario_vm.obtener_usuario(correo)
