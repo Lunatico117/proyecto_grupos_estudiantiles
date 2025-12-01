@@ -41,7 +41,9 @@
                     {% if messages %}
                         {% for category, message in messages %}
                             {% set cls = category.replace('clubes', '').strip() %}
-                            <div class="msg {{ cls or 'info' }}">{{ message }}</div>
+                            {% if 'success' not in cls and 'info' not in cls %}
+                                <div class="msg {{ cls or 'info' }}">{{ message }}</div>
+                            {% endif %}
                         {% endfor %}
                     {% endif %}
                 {% endwith %}

@@ -31,6 +31,17 @@
 
     <!-- Home -->
     <section class="home">
+        <div class="flash" aria-live="polite" role="status">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% set cls = category.replace('clubes', '').strip() %}
+                        <div class="msg {{ cls or 'info' }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
         <!-- Grilla principal -->
         <div class="home-container">
             <!-- Primer tercio: logo + botón -->
@@ -53,7 +64,19 @@
         </div>
     </section>
 
-
-
+    <script>
+        // Auto-ocultar notificaciones flash en home
+        (function () {
+            const flashes = document.querySelectorAll('.flash .msg');
+            if (!flashes.length) return;
+            setTimeout(() => {
+                flashes.forEach(el => {
+                    el.style.transition = 'opacity .35s ease';
+                    el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 400);
+                });
+            }, 4500);
+        })();
+    </script>
 </body>
 </html>

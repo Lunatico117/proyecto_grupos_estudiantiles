@@ -30,6 +30,17 @@
 
     <!-- Home modificado para usuarios loggeados -->
     <section class="home">
+        <div class="flash" aria-live="polite" role="status">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        {% set cls = category.replace('clubes', '').strip() %}
+                        <div class="msg {{ cls or 'info' }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
         <div class="home-container">
             <div class="home-left">
                 <img src="../static/img/Logo.png" alt="Logo Grupos Estudiantiles" class="home-logo">
@@ -49,5 +60,20 @@
             <a href="#"><i class="fa-solid fa-envelope"></i></a>
         </div>
     </section>
+
+    <script>
+        // Auto-ocultar notificaciones flash en home
+        (function () {
+            const flashes = document.querySelectorAll('.flash .msg');
+            if (!flashes.length) return;
+            setTimeout(() => {
+                flashes.forEach(el => {
+                    el.style.transition = 'opacity .35s ease';
+                    el.style.opacity = '0';
+                    setTimeout(() => el.remove(), 400);
+                });
+            }, 4500);
+        })();
+    </script>
 </body>
 </html>
